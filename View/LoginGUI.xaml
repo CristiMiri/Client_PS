@@ -5,8 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client.View"
         mc:Ignorable="d"
-        Title="LoginGUI" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Background="{DynamicResource AppBackgroundBrush}"
+        Title="Login" Height="450" Width="800">
+
+    <UniformGrid Rows="4"  HorizontalAlignment="Center" VerticalAlignment="Center">
+        <!--Email box-->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Label Content="{DynamicResource EmailLabel}"  Width="100" VerticalAlignment="Center"
+                       Style="{StaticResource LabelBaseStyle}"/>
+            <TextBox Name="EmailTextBox" Width="200" VerticalAlignment="Center"
+                         Style="{StaticResource InputControlStyle}" />
+        </StackPanel>
+        <!--Password box-->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Label Content="{DynamicResource PasswordLabel}"  Width="100" VerticalAlignment="Center"
+                       Style="{StaticResource LabelBaseStyle}"/>
+            <TextBox Name="PasswordTextBox" Width="200" VerticalAlignment="Center"
+                         Style="{StaticResource InputControlStyle}" />
+        </StackPanel>
+        <!--Button section-->
+        <Button Content="{DynamicResource LoginButton}"  Width="100" x:Name="LoginButton" Height="30"
+                        HorizontalAlignment="Center" Background="Green" Click="Login"/>
+    </UniformGrid>
+
 </Window>

@@ -2,13 +2,6 @@
 using Client.Services;
 using Client.View;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Xml.Linq;
 
 namespace Client.Presenter
 {
@@ -16,10 +9,12 @@ namespace Client.Presenter
     {
         private AdminGui _adminGui;
         private ClientHost clientHost;
+        private UserService _userService;
 
         public AdminPresenter(AdminGui adminGui)
         {
             _adminGui = adminGui;
+            _userService = new UserService();
             StartSetup();
         }
 
@@ -30,65 +25,110 @@ namespace Client.Presenter
 
         private async Task setup()
         {
-            clientHost = new ClientHost();
-            await clientHost.ConnectToServer();
+            clientHost = ClientHost.Instance;            
             await LoadUserTable();
         }
 
         private async Task LoadUserTable()
         {
-            var response = await clientHost.RequestUserService("GetAllUsers", new { });            
-            Response responseObject = JsonConvert.DeserializeObject<Response>(response);
-
-            if (responseObject.Result)
-            {
-                // Deserialize the Message property into a list of UserDTO
-                var users = JsonConvert.DeserializeObject<List<UserDTO>>(responseObject.Message);
-
-                // Update the GUI with the user list (you need to implement UpdateUserTable in AdminGui)
-                _adminGui.GetUserTable().ItemsSource = users;
-            }
-            Console.WriteLine(responseObject.Message);
+            var users = await _userService.GetAllUsers();
+            _adminGui.GetUserTable().ItemsSource = users;
         }
 
         private UserDTO ValidData()
         {
-            string Id= _adminGui.GetIdTextBox().Text;
-            string Name= _adminGui.GetNameTextBox().Text;
+            string Id = _adminGui.GetIdTextBox().Text;
+            string Name = _adminGui.GetNameTextBox().Text;
             string Email = _adminGui.GetEmailTextBox().Text;
             string Password = _adminGui.GetPasswordTextBox().Text;
             string Phone = _adminGui.GetPhoneTextBox().Text;
             UserType userType = (UserType)_adminGui.GetUserTypeComboBox().SelectedItem;
             bool anyEmpty = new[] { Id, Name, Email, Password, Phone }.Any(string.IsNullOrEmpty);
             if (anyEmpty)
-            {                
+            {
                 return null;
             }
-            return new UserDTO(int.Parse(Id), Name, Email, Password,userType, Phone);            
+            return new UserDTO(int.Parse(Id), Name, Email, Password, userType, Phone);
         }
 
 
-        public async void CreateUser()
+        public async Task CreateUser()
         {
-            try
+            UserDTO user = ValidData();
+            if (user == null)
+                _adminGui.ShowMessage("All fields are mandatory");
+            bool result = await _userService.CreateUser(user);
+            if (result)
             {
-                //UserDTO user = ValidData();
-                //if (user == null)
-                //    _adminGui.ShowMessage("All fields are mandatory");
-                UserDTO userDummy = new UserDTO(0, "Name", "Email", "Password", UserType.PARTICIPANT, "Phone");
-                var createUserResult = await clientHost.RequestUserService("CreateUser", userDummy);
                 _adminGui.ClearFormFields();
                 LoadUserTable();
+                _adminGui.ShowMessage("Operation Successful");
             }
-            catch (Exception ex)
+            else
             {
                 _adminGui.ShowMessage("Operation Failed");
             }
         }
 
+        public async Task UpdateUser()
+        {
+            UserDTO user = ValidData();
+            if (user == null)
+                _adminGui.ShowMessage("All fields are mandatory");
+            bool result = await _userService.UpdateUser(user);
+            if (result)
+            {
+                _adminGui.ClearFormFields();
+                LoadUserTable();
+                _adminGui.ShowMessage("Operation Successful");
+            }
+            else
+            {
+                _adminGui.ShowMessage("Operation Failed");
+            }
+        }
+
+        public async Task DeleteUser()
+        {
+            UserDTO user = ValidData();
+            if (user == null)
+                _adminGui.ShowMessage("All fields are mandatory");
+            bool deleteUserResult = await _userService.DeleteUser(user);
+            if (deleteUserResult)
+            {
+                _adminGui.ClearFormFields();
+                LoadUserTable();
+                _adminGui.ShowMessage("Operation Successful");
+            }
+            else
+            {
+                _adminGui.ShowMessage("Operation Failed");
+            }
+        }
+
+
+
+        public async Task FilterUsers()
+        {
+
+            if (_adminGui.GetFilterUsersComboBox().SelectedIndex == 3)
+            {
+                await LoadUserTable();    
+                return;
+            }
+            else
+            {
+                UserType userType = (UserType)_adminGui.GetFilterUsersComboBox().SelectedIndex;                
+                var users = await _userService.GetUsersByUserType(userType);
+                _adminGui.GetUserTable().ItemsSource = users;
+                return;
+            }
+        }
+
+
         public void SelectUser()
         {
-            UserDTO user = (UserDTO) _adminGui.GetUserTable().SelectedItem;
+            UserDTO user = (UserDTO)_adminGui.GetUserTable().SelectedItem;
             if (user == null)
             {
                 return;

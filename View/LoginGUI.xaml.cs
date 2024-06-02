@@ -1,6 +1,10 @@
-﻿using System;
+﻿using Client.DTO;
+using Client.Presenter;
+using Client.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.JavaScript;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,9 +23,29 @@ namespace Client.View
     /// </summary>
     public partial class LoginGUI : Window
     {
+        private LoginPresenter _loginPresenter;
         public LoginGUI()
         {
             InitializeComponent();
+            _loginPresenter = new LoginPresenter(this);
+        }
+
+        //Data access methods
+        public TextBox GetEmailTextBox()
+        { return EmailTextBox; }
+        public TextBox GetPasswordTextBox()
+        { return PasswordTextBox; }
+        public Button GetLoginButton()
+        { return LoginButton; }
+
+        
+        public void ShowError(string message)
+        {
+            MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        private async void Login(object sender, RoutedEventArgs e)
+        {
+            await _loginPresenter.Login();
         }
     }
 }

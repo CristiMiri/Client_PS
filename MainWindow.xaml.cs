@@ -21,8 +21,10 @@ namespace Client
         {
             InitializeComponent();
             this.Hide();
-            AdminGui adminGui = new AdminGui();
-            adminGui.Show();
+            //AdminGui adminGui = new AdminGui();
+            //adminGui.Show();
+            OrganizatorGUI organizatorGUI = new OrganizatorGUI();
+            organizatorGUI.Show();
         }
     }
 }

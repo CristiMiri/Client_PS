@@ -8,18 +8,21 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Client.DTO;
 
+
 namespace Client.Services
 {
     internal class ClientHost
     {
+        private static readonly Lazy<ClientHost> instance = new Lazy<ClientHost>(() => new ClientHost());
         private TcpClient? client;
         private NetworkStream? stream;
-        //private SslStream? s;
-        public ClientHost() { }
 
-        public async 
-        Task
-ConnectToServer()
+
+        private ClientHost() { ConnectToServer(); }
+        // Public property to provide access to the singleton instance
+        public static ClientHost Instance => instance.Value;
+
+        public async Task ConnectToServer()
         {
             try
             {
@@ -29,98 +32,181 @@ ConnectToServer()
                 client = new TcpClient();
                 await client.ConnectAsync(serverIp, port);
                 stream = client.GetStream();
-                //StatusTextBlock.Text = $"Connected to server on {serverIp}:{port}.";
                 Console.WriteLine($"Connected to server on {serverIp}:{port}.");
             }
             catch (Exception ex)
             {
-                //StatusTextBlock.Text = $"Failed to connect to server: {ex.Message}";
                 Console.WriteLine($"Failed to connect to server: {ex.Message}");
             }
         }
 
 
-        public async Task<List<UserDTO>> RequestGetAllUsers()
+        public async Task<PackageDTO> RequestUserService(string methodName, object parameters)
         {
-            var request = new
+            try
             {
-                service = "UserService",
-                method = "GetAllUsers",
-                parameters = new { }
-            };
-
-            string requestJson = JsonConvert.SerializeObject(request);
-            byte[] requestBytes = Encoding.UTF8.GetBytes(requestJson);
-            await stream.WriteAsync(requestBytes, 0, requestBytes.Length);
-
-            byte[] responseBuffer = new byte[4096];
-            int byteCount = await stream.ReadAsync(responseBuffer, 0, responseBuffer.Length);
-            string responseJson = Encoding.UTF8.GetString(responseBuffer, 0, byteCount);
-            Console.WriteLine("Response: " + responseJson);
-
-            var response = JsonConvert.DeserializeObject<Dictionary<string, object>>(responseJson);
-
-            bool success = Convert.ToBoolean(response["Result"]);
-            string message = response["Message"].ToString();
-
-            if (success)
-            {
-                var users = JsonConvert.DeserializeObject<List<UserDTO>>(message); // Assuming users are in the message
-                foreach (var user in users)
+                var request = new
                 {
-                    Console.WriteLine($"User: {user.Id}, {user.Name}, {user.Email}");
+                    service = "UserService",
+                    method = methodName,
+                    parameters = parameters
+                };
+                //Console.WriteLine("Request: " + JsonConvert.SerializeObject(request));
+
+                string requestJson = JsonConvert.SerializeObject(request);
+                byte[] requestBytes = Encoding.UTF8.GetBytes(requestJson);
+                await stream.WriteAsync(requestBytes, 0, requestBytes.Length);
+
+                byte[] responseBuffer = new byte[4096];
+                int byteCount = await stream.ReadAsync(responseBuffer, 0, responseBuffer.Length);
+                string responseJson = Encoding.UTF8.GetString(responseBuffer, 0, byteCount);
+                Console.WriteLine("Response: " + responseJson);
+
+                var response = JsonConvert.DeserializeObject<Dictionary<string, object>>(responseJson);
+                bool success = Convert.ToBoolean(response["Result"]);
+                string message = response["Message"].ToString();
+                object data = null;
+
+                if (success)
+                {
+                    // Attempt to deserialize the response data to a dynamic object
+                    try
+                    {
+                        data = JsonConvert.DeserializeObject<object>(response["Data"].ToString());
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Received data could not be deserialized to a dynamic object.");
+                    }
                 }
-                return users;
+                else
+                {
+                    Console.WriteLine("Operation failed: " + message);
+                }
+
+                return new PackageDTO
+                {
+                    Result = success,
+                    Message = message,
+                    Data = data
+                };
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine("Operation failed: " + message);
-                return new List<UserDTO>(); // Return an empty list or handle as needed
+                Console.WriteLine("Error occurred during request: " + ex.Message);
+                return new PackageDTO { Result = false, Message = "Error occurred during request", Data = null };
             }
         }
-
-        public async Task<dynamic> RequestUserService(string methodName, object parameters)
+        public async Task<PackageDTO> RequestPresentationService(string methodName, object parameters)
         {
-            var request = new
+
+            try
             {
-                service = "UserService",
-                method = methodName,
-                parameters = parameters
-            };
-
-            string requestJson = JsonConvert.SerializeObject(request);
-            byte[] requestBytes = Encoding.UTF8.GetBytes(requestJson);
-            await stream.WriteAsync(requestBytes, 0, requestBytes.Length);
-
-            byte[] responseBuffer = new byte[4096];
-            int byteCount = await stream.ReadAsync(responseBuffer, 0, responseBuffer.Length);
-            string responseJson = Encoding.UTF8.GetString(responseBuffer, 0, byteCount);
-            Console.WriteLine("Response: " + responseJson);
-
-            var response = JsonConvert.DeserializeObject<Dictionary<string, object>>(responseJson);
-            bool success = Convert.ToBoolean(response["Result"]);
-            string message = response["Message"].ToString();
-
-            if (success)
-            {
-                // Attempt to deserialize the response data based on the expected return type
-                try
+                var request = new
                 {
-                    var data = JsonConvert.DeserializeObject<dynamic>(message);
-                    return data;
-                }
-                catch (JsonSerializationException)
+                    service = "PresentationService",
+                    method = methodName,
+                    parameters = parameters
+                };
+                string requestJson = JsonConvert.SerializeObject(request);
+                byte[] requestBytes = Encoding.UTF8.GetBytes(requestJson);
+                await stream.WriteAsync(requestBytes, 0, requestBytes.Length);
+
+                byte[] responseBuffer = new byte[4096];
+                int byteCount = await stream.ReadAsync(responseBuffer, 0, responseBuffer.Length);
+                string responseJson = Encoding.UTF8.GetString(responseBuffer, 0, byteCount);
+                Console.WriteLine("Response: " + responseJson);
+
+                var response = JsonConvert.DeserializeObject<Dictionary<string, object>>(responseJson);
+                bool success = Convert.ToBoolean(response["Result"]);
+                string message = response["Message"].ToString();
+                object data = null;
+
+                if (success)
                 {
-                    Console.WriteLine("Received data could not be deserialized to a dynamic object.");
-                    return null;
+                    // Attempt to deserialize the response data to a dynamic object
+                    try
+                    {
+                        data = JsonConvert.DeserializeObject<object>(response["Data"].ToString());
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Received data could not be deserialized to a dynamic object.");
+                    }
                 }
+                else
+                {
+                    Console.WriteLine("Operation failed: " + message);
+                }
+
+                return new PackageDTO
+                {
+                    Result = success,
+                    Message = message,
+                    Data = data
+                };
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine("Operation failed: " + message);
-                return null;
+                Console.WriteLine("Error occurred during request: " + ex.Message);
+                return new PackageDTO { Result = false, Message = "Error occurred during request", Data = null };
+            }
+
+        }
+        public async Task<PackageDTO> RequestParticipantService(string methodName, object parameters)
+        {
+            try
+            {
+                var request = new
+                {
+                    service = "ParticipantService",
+                    method = methodName,
+                    parameters = parameters
+                };
+                string requestJson = JsonConvert.SerializeObject(request);
+                byte[] requestBytes = Encoding.UTF8.GetBytes(requestJson);
+                await stream.WriteAsync(requestBytes, 0, requestBytes.Length);
+
+                byte[] responseBuffer = new byte[4096];
+                int byteCount = await stream.ReadAsync(responseBuffer, 0, responseBuffer.Length);
+                string responseJson = Encoding.UTF8.GetString(responseBuffer, 0, byteCount);
+                Console.WriteLine("Response: " + responseJson);
+
+                var response = JsonConvert.DeserializeObject<Dictionary<string, object>>(responseJson);
+                bool success = Convert.ToBoolean(response["Result"]);
+                string message = response["Message"].ToString();
+                object data = null;
+
+                if (success)
+                {
+                    // Attempt to deserialize the response data to a dynamic object
+                    try
+                    {
+                        data = JsonConvert.DeserializeObject<object>(response["Data"].ToString());
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Received data could not be deserialized to a dynamic object.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Operation failed: " + message);
+                }
+
+                return new PackageDTO
+                {
+                    Result = success,
+                    Message = message,
+                    Data = data
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error occurred during request: " + ex.Message);
+                return new PackageDTO { Result = false, Message = "Error occurred during request", Data = null };
             }
         }
-
     }
+
 }

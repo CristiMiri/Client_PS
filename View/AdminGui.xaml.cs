@@ -29,6 +29,9 @@ namespace Client.View
             InitializeComponent();
             _adminPresenter = new AdminPresenter(this);
             UserTypeComboBox.ItemsSource = Enum.GetValues(typeof(UserType));
+            var items = Enum.GetValues(typeof(UserType)).Cast<UserType>().Select(x => x.ToString()).ToList();
+            items.Insert(3,"All");
+            ComboBoxUserType.ItemsSource = items;
         }
 
 
@@ -61,10 +64,15 @@ namespace Client.View
         public Button GetUpdateUserButton()
         { return this.UpdateUserButton; }
 
-        public Button GetBackButton()
-        { return this.BackButton; }
-
         
+        //Filter Section
+        public ComboBox GetFilterUsersComboBox()
+        { return this.ComboBoxUserType; }
+
+        public Button GetFilterUsersButton()
+        { return this.FilterUsersButton; }
+
+
         //Data Table
         public DataGrid GetUserTable()
         { return this.UserTable; }
@@ -93,15 +101,29 @@ namespace Client.View
         {
             MessageBox.Show(message, "Info");
         }
-
-        private void CreateUserButton_Click(object sender, RoutedEventArgs e)
-        {
-            this._adminPresenter.CreateUser();
-        }
-
         private void UserTable_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             _adminPresenter.SelectUser();
+        }
+
+
+        //Button actions 
+        private async void CreateUserButton_Click(object sender, RoutedEventArgs e)
+        {
+            await this._adminPresenter.CreateUser();
+        }
+        private async void UpdateUserButton_Click(object sender, RoutedEventArgs e)
+        {
+            await this._adminPresenter.UpdateUser();
+        }
+        private async void DeleteUserButton_Click(object sender, RoutedEventArgs e)
+        {
+            await this._adminPresenter.DeleteUser();
+        }
+
+        private async void FilterUsersButton_Click(object sender, RoutedEventArgs e)
+        {
+            await _adminPresenter.FilterUsers();
         }
     }
 }

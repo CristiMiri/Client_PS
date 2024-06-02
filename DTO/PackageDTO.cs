@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Client.DTO
 {
-    internal class Response
+    internal class PackageDTO
     {
         public bool Result {  get; set; }
         public string Message {  get; set; }
         public object Data {  get; set; }
 
-        public Response() { }
+        public PackageDTO() { }
     }
 }

@@ -5,8 +5,295 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client.View"
         mc:Ignorable="d"
-        Title="OrganizatorGUI" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Background="{DynamicResource AppBackgroundBrush}"          
+        Title="Organizator" Height="450" Width="800">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header Presentations :row1-->
+            <TextBlock Grid.Row="1" Text="{DynamicResource PresentationLabel}"  FontSize="20" FontWeight="Bold" Margin="0,5,0,5" Style="{StaticResource HeaderTextBlockStyle}" HorizontalAlignment="Left"/>
+
+
+            <!-- Manager Presentations :row2-->
+            <Border Style="{StaticResource DefaultBorderStyle}" Grid.Row="2">
+                <Expander Header="{DynamicResource Presentation_Management}" IsExpanded="False" 
+                      x:Name="PresentationManagerExpander"
+                      Style="{StaticResource ExpanderBaseStyle}">
+                    <UniformGrid Columns="2"  Height="368">
+                        <!-- Hidden labels for internal use -->
+                        <Label Visibility="Collapsed"/>
+                        <TextBox x:Name="IdPrezentareTextBox" Visibility="Collapsed" 
+                               Text="{Binding Path=PrezentareSelectata.Id, Mode=TwoWay}"/>
+
+                        <!-- Title -->
+                        <Label Content="{DynamicResource TitleLabel}"  Style="{StaticResource LabelBaseStyle}"/>
+                        <TextBox x:Name="TitleTextBox" Style="{StaticResource InputControlStyle}" 
+                             Text="{Binding Path=PrezentareSelectata.Titlu, Mode=TwoWay}"/>
+
+                        <!-- Description -->
+                        <Label Content="{DynamicResource DescriptionLabel}" Style="{StaticResource LabelBaseStyle}"/>
+                        <TextBox x:Name="DescriptionTextBox" Style="{StaticResource InputControlStyle}" />
+
+                        <!-- Date -->
+                        <Label Content="{DynamicResource DateLabel}" Style="{StaticResource LabelBaseStyle}"/>
+                        <DatePicker x:Name="DataDatePicker" Style="{StaticResource InputControlStyle}" />
+
+                        <!-- Time -->
+                        <Label Content="{DynamicResource TimeLabel}" Style="{StaticResource LabelBaseStyle}"/>
+                        <TextBox x:Name="TimeTextBox" Style="{StaticResource InputControlStyle}" />
+
+                        <!-- Section -->
+                        <Label Content="{DynamicResource SectionLabel}"  Style="{StaticResource LabelBaseStyle}"/>
+                        <ComboBox x:Name="PresentationFormSectionComboBox" Style="{StaticResource ComboBoxBaseStyle}"                               
+                              HorizontalAlignment="Center" Width="200" Margin="-5,5,5,5"/>
+
+                        <!-- Author -->
+                        <Label Content="{DynamicResource AuthorLabel}" Style="{StaticResource LabelBaseStyle}"/>
+                        <TextBox x:Name="AuthorTextBox" Style="{StaticResource InputControlStyle}" />
+
+                        <!-- Buttons -->
+                        <Button x:Name="CreatePresentationButton" Content="{DynamicResource AddPresentationButton}"                                                            
+                            MinWidth="150" Style="{StaticResource ButtonBaseStyle}" Click="CreatePresentationButton_Click"/>
+                        <Button x:Name="UpdatePresentationButton" Content="{DynamicResource UpdatePresentationButton}"                            
+                            MinWidth="150" Style="{StaticResource ButtonBaseStyle}" Click="UpdatePresentationButton_Click"/>
+                        <Button x:Name="DeletePresentationButton" Content="{DynamicResource DeletePresentationButton}"
+                            MinWidth="150" Style="{StaticResource ButtonBaseStyle}" Click="DeletePresentationButton_Click"/>
+                    </UniformGrid>
+                </Expander>
+            </Border>
+
+
+            <!-- Filter Presentations :row3-->
+            <Border Grid.Row="3" Style="{StaticResource DefaultBorderStyle}">
+                <UniformGrid Columns="3">
+                    <Label Content="Filtrare prezentari" Style="{StaticResource LabelBaseStyle}" 
+                       Grid.Column="0" Grid.Row="0"/>
+                    <ComboBox x:Name="FilterPresentationsComboBox" 
+                          Grid.Column="1" Grid.Row="0"
+                          Style="{StaticResource ComboBoxBaseStyle}"
+                            />
+                    <Button x:Name="FilterPresentationsButton" Content="Afisare Prezentari"  
+                        Grid.Column="2" Grid.Row="0" Click="FilterPresentationsButton_Click"
+                           Style="{StaticResource ButtonBaseStyle}"
+                        />
+                    <Label Content="Salvare prezentari" Style="{StaticResource LabelBaseStyle}" 
+                       Grid.Column="0" Grid.Row="1"/>
+                    <ComboBox x:Name="SelectFormatComboBox" 
+                          Grid.Column="1" Grid.Row="1"
+                          Style="{StaticResource ComboBoxBaseStyle}"
+                          />
+                    <Button x:Name="DownloadListButton" Content="Descarca Prezentari"  
+                        Grid.Column="2" Grid.Row="1" Click="DownloadListButton_Click"
+                            Style="{StaticResource ButtonBaseStyle}"
+                        />
+                </UniformGrid>
+            </Border>
+
+
+            <!-- Tabel Prezentari :row4-->
+            <!--<DataGrid x:Name="TabelPrezentari" Grid.Row="4" Style="{StaticResource DataGridBaseStyle}"                      
+                  HorizontalAlignment="Stretch" Margin="0,10,0,0">
+                <DataGrid.ColumnHeaderStyle>
+                    <StaticResource ResourceKey="DataGridColumnHeaderStyle"/>
+                </DataGrid.ColumnHeaderStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="{DynamicResource PresentationIdHeader}"         Binding="{Binding Id}"  />
+                    <DataGridTextColumn Header="{DynamicResource PresentationTitleHeader}"      Binding="{Binding Title}"  />
+                    <DataGridTextColumn Header="{DynamicResource PresentationDescriptionHeader}" Binding="{Binding Description}"  />
+                    <DataGridTextColumn Header="{DynamicResource PresentationDateHeader}"       Binding="{Binding Date}"  />
+                    <DataGridTextColumn Header="{DynamicResource PresentationTimeHeader}"       Binding="{Binding Hour}"  />
+                    <DataGridTextColumn Header="{DynamicResource PresentationSectionHeader}"    Binding="{Binding Section}"  />
+                    <DataGridTemplateColumn Header="{DynamicResource PresentationAuthorHeader}">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ItemsControl ItemsSource="{Binding Author}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Name}" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="{DynamicResource Participant}">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ItemsControl ItemsSource="{Binding Participants}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Name}" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    -->
+            <!--<DataGridTextColumn Header="ID Conferinta" Binding="{Binding Id_conferinta}"  />-->
+            <!--
+                </DataGrid.Columns>
+            </DataGrid>-->
+            <DataGrid x:Name="PresentationTable" Grid.Row="4" Style="{StaticResource DataGridBaseStyle}" 
+                HorizontalAlignment="Stretch" Margin="0,10,0,0" AutoGenerateColumns="True"
+                      ColumnWidth="auto"
+                      SelectionChanged="PresentationTable_SelectionChanged"
+                AutoGeneratingColumn="PresentationTable_AutoGeneratingColumn">
+                <DataGrid.ColumnHeaderStyle>
+                    <StaticResource ResourceKey="DataGridColumnHeaderStyle"/>
+                </DataGrid.ColumnHeaderStyle>
+            </DataGrid>
+
+
+            <!-- Header Participanti -->
+            <TextBlock Grid.Row="5" Text="{DynamicResource Participant}"  FontSize="20" FontWeight="Bold" Margin="0,10,0,0" Style="{StaticResource HeaderTextBlockStyle}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+
+            <!-- Manager Participants -->
+            <Border Style="{StaticResource DefaultBorderStyle}" Grid.Row="6">
+                <Expander Header="{DynamicResource Participant_Management}" IsExpanded="False" 
+                    x:Name="ParticipantManagerExpander" Style="{StaticResource ExpanderBaseStyle}">
+                    <UniformGrid Columns="2">
+                        <!-- Hidden labels for internal use -->
+
+                        <Label Visibility="Collapsed"/>
+                        <TextBox x:Name="IdParticipantTextBox" Visibility="Collapsed" Text="{Binding Path=ParticipantSelectat.Id, Mode=TwoWay}"/>
+
+                        <!-- Row 1: Name -->
+                        <Label Content="{DynamicResource NameLabel}" Style="{StaticResource LabelBaseStyle}"/>
+                        <TextBox x:Name="NameTextBox" Style="{StaticResource InputControlStyle}" />
+
+                        <!-- Row 2: Email -->
+                        <Label Content="{DynamicResource EmailLabel}"  Style="{StaticResource LabelBaseStyle}"/>
+                        <TextBox x:Name="EmailTextBox" Style="{StaticResource InputControlStyle}" />
+
+                        <!-- Row 3: Phone -->
+                        <Label Content="{DynamicResource PhoneLabel}"  Style="{StaticResource LabelBaseStyle}"/>
+                        <TextBox x:Name="PhoneTextBox" Style="{StaticResource InputControlStyle}" />
+
+                        <!-- Row 4: CNP-->
+                        <Label Style="{StaticResource LabelBaseStyle}" Content="{DynamicResource PINLabel}"/>
+                        <TextBox Name="PinTextBox" Style="{StaticResource InputControlStyle}"/>
+
+                        <!-- Row 5: Photo Upload -->
+                        <Label Style="{StaticResource LabelBaseStyle}" Content="{DynamicResource PhotoLabel}"/>
+                        <TextBox Name="PhotoPathTextBox" Style="{StaticResource InputControlStyle}" Visibility="Collapsed"/>
+                        <Button Name="BrowsePhotoButton" Style="{DynamicResource ButtonBaseStyle}" 
+            HorizontalAlignment="Center" Width="100" Content="{DynamicResource BrowseButton}"/>
+
+                        <!-- Row 6: Document Upload -->
+                        <Label Style="{StaticResource LabelBaseStyle}" Content="{DynamicResource CVLabel}"/>
+                        <TextBox Name="DocumentPathTextBox" Style="{StaticResource InputControlStyle}" Visibility="Collapsed"/>
+                        <Button Name="BrowseDocumentButton" Style="{DynamicResource ButtonBaseStyle}" 
+            HorizontalAlignment="Center" Width="100" Content="{DynamicResource BrowseButton}"/>
+
+                        <Button x:Name="CreateParticipantButton" Content="{DynamicResource AddParticipantButton}"
+                Command="{Binding Path=CreateParticipantCommand}"
+                Style="{StaticResource ButtonBaseStyle}"/>
+                        <Button x:Name="UpdateParticipantButton" Content="{DynamicResource UpdateParticipantButton}"
+                Command="{Binding Path=UpdateParticipantCommand}"
+                Style="{StaticResource ButtonBaseStyle}"/>
+                        <Button x:Name="AcceptParticipantButton" Content="{DynamicResource AcceptParticipantButton}"
+                Command="{Binding Path=AcceptParticipantCommand}"
+                Style="{StaticResource ButtonBaseStyle}"/>
+                        <Button x:Name="RejectParticipantButton" Content="{DynamicResource RejectParticipantButton}"
+                Command="{Binding Path=RejectParticipantCommand}"
+                Style="{StaticResource ButtonBaseStyle}"/>
+                        <Button x:Name="DeleteParticipantButton" Content="{DynamicResource DeleteParticipantButton}"
+                Command="{Binding Path=DeleteParticipantCommand}"
+                Style="{StaticResource ButtonBaseStyle}"/>
+                    </UniformGrid>
+
+
+                </Expander>
+            </Border>
+
+
+            <!-- Filter Participanti-->
+            <Border Grid.Row="7" Style="{StaticResource DefaultBorderStyle}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="{DynamicResource FilterParticipantsLabel}" Style="{StaticResource LabelBaseStyle}" Grid.Column="0"/>
+                    <ComboBox x:Name="FilterParticipantsComboBox" Grid.Column="1" Style="{StaticResource ComboBoxBaseStyle}"/>
+                    <Button x:Name="FilterParticipantButton" Content="{DynamicResource ShowButton}"  Grid.Column="2" 
+                    Style="{StaticResource ButtonBaseStyle}"/>
+                </Grid>
+            </Border>
+
+
+            <!-- Tabel Participanti -->
+            <DataGrid Grid.Row="8" x:Name="TabelParticipanti" Style="{StaticResource DataGridBaseStyle}" 
+                  HorizontalAlignment="Stretch"
+                  SelectedItem="{Binding Path=ParticipantSelectat}"
+                  ItemsSource="{Binding Path=ListaParticipanti}">
+                <DataGrid.ColumnHeaderStyle>
+                    <StaticResource ResourceKey="DataGridColumnHeaderStyle"/>
+                </DataGrid.ColumnHeaderStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="{DynamicResource IdHeader}" Binding="{Binding Id}"  />
+                    <DataGridTextColumn Header="{DynamicResource NameHeader}" Binding="{Binding Name}"  />
+                    <DataGridTextColumn Header="{DynamicResource EmailHeader}" Binding="{Binding Email}"  />
+                    <DataGridTextColumn Header="{DynamicResource PhoneHeader}" Binding="{Binding Phone}"  />
+                    <DataGridTextColumn Header="{DynamicResource PINHeader}" Binding="{Binding CNP}"  />
+                    <DataGridTemplateColumn Header="{DynamicResource CVHeader}" Width="auto" MinWidth="100">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <Hyperlink NavigateUri="{Binding PdfFilePath}">
+                                    <TextBlock Text="{Binding PdfFilePath}" />
+                                    </Hyperlink>
+                                </TextBlock>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="{DynamicResource PhotoHeader}"  Width="auto" MinWidth="100">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Source="{Binding Path=PhotoFilePath}" Width="100" Height="100"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <!--Statistics Section-->
+            <Border Style="{StaticResource DefaultBorderStyle}" Grid.Row="9">
+                <Expander Header="{DynamicResource Statistics_Manager}" IsExpanded="True" 
+                    x:Name="StatisticsManager" Style="{StaticResource ExpanderBaseStyle}">
+                    <UniformGrid Columns="2">
+                        <Button x:Name="ShowParticipantsByConferenceChartButton" Content="Show Participants by conference"                     
+                                Style="{StaticResource ButtonBaseStyle}" MinWidth="150"/>
+                        <Button x:Name="ShowParticipantsBySectionChartButton" Content="Show Participants by section"
+                                Style="{StaticResource ButtonBaseStyle}" MinWidth="150"/>
+                        <Button x:Name="ShowPresentationsPerDayChartButton" Content="Show Presentations per day"
+                                Style="{StaticResource ButtonBaseStyle}" MinWidth="150"/>
+                        <Button x:Name="ShowPresentationsByAuthorChartButton" Content="Show Presentations by author"
+                                Style="{StaticResource ButtonBaseStyle}" MinWidth="150"/>
+                        <Button x:Name="ShowLineChartDialogButton" Content="Show Line Chart"
+                                Style="{StaticResource ButtonBaseStyle}" MinWidth="150"/>
+                        <Button x:Name="ShowRingChartButton" Content="Show Ring Chart"
+                                Style="{StaticResource ButtonBaseStyle}" MinWidth="150"/>
+                    </UniformGrid>
+                </Expander>
+            </Border>
+
+        </Grid>
+    </ScrollViewer>
 </Window>

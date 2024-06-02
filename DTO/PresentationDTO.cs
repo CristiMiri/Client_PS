@@ -15,7 +15,7 @@ namespace Client.DTO
         SPORT,
         ALL
     }
-    internal class PresentationDTO
+    public class PresentationDTO
     {
         public int Id { get; set; }
         public string Title { get; set; }

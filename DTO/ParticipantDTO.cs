@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Client.DTO
 {
-    internal class ParticipantDTO
+    public class ParticipantDTO
     {
         public int Id { get; set; }
         public string Name { get; set; }

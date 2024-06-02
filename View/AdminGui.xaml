@@ -18,18 +18,13 @@
 
 
             <!-- Form section : row 0 -->
-            <Expander Header="{DynamicResource AdminPageTitle}" IsExpanded="True" Margin="10" Grid.Row="0"
-              x:Name="AdministrationExpander" Style="{StaticResource ExpanderBaseStyle}">
+            <Expander Header="{DynamicResource AdminPageTitle}" IsExpanded="True" Margin="10" Grid.Row="0" x:Name="AdministrationExpander" Style="{StaticResource ExpanderBaseStyle}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -40,12 +35,11 @@
                     </Grid.RowDefinitions>
 
                     <!-- ID - Hidden -->
-                    <TextBox x:Name="IdTextBox" Margin="0,5,10,5" Grid.Column="1" Grid.Row="0" Visibility="Hidden" Style="{StaticResource InputControlStyle}"                    />
+                    <TextBox x:Name="IdTextBox" Margin="0,5,10,5" Grid.Column="1" Grid.Row="0" Visibility="Hidden" Style="{StaticResource InputControlStyle}"/>
 
                     <!-- Name -->
                     <Label Content="{DynamicResource NameLabel}" Grid.Column="0" Grid.Row="1" Style="{StaticResource LabelBaseStyle}"/>
-                    <TextBox x:Name="NameTextBox" Margin="0,5,10,5" Grid.Column="1" Grid.Row="1" Style="{StaticResource InputControlStyle}"
-                     />
+                    <TextBox x:Name="NameTextBox" Margin="0,5,10,5" Grid.Column="1" Grid.Row="1" Style="{StaticResource InputControlStyle}"/>
 
                     <!-- Email -->
                     <Label Content="{DynamicResource EmailLabel}" Grid.Column="0" Grid.Row="2" Style="{StaticResource LabelBaseStyle}"/>
@@ -57,63 +51,35 @@
 
                     <!-- User Type -->
                     <Label Content="{DynamicResource UserTypeLabel}" Grid.Column="0" Grid.Row="4" Style="{StaticResource LabelBaseStyle}"/>
-                    <ComboBox x:Name="UserTypeComboBox" Margin="0,5,10,5" Grid.Column="1" Grid.Row="4" 
-                          Style="{StaticResource ComboBoxBaseStyle}" HorizontalAlignment="Center" Width="200"  
-                              ItemsSource=""
-                          />
-
+                    <ComboBox x:Name="UserTypeComboBox" Margin="0,5,10,5" Grid.Column="1" Grid.Row="4" Style="{StaticResource ComboBoxBaseStyle}" HorizontalAlignment="Center" Width="200"/>
 
                     <!-- Telephone -->
                     <Label Content="{DynamicResource PhoneLabel}" Grid.Column="0" Grid.Row="5" Style="{StaticResource LabelBaseStyle}"/>
-                    <TextBox x:Name="PhoneTextBox" Margin="0,5,10,5" Grid.Column="1" Grid.Row="5" Style="{StaticResource InputControlStyle}"
-                     />
+                    <TextBox x:Name="PhoneTextBox" Margin="0,5,10,5" Grid.Column="1" Grid.Row="5" Style="{StaticResource InputControlStyle}"/>
 
                     <!-- Buttons -->
-                    <WrapPanel Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" >
-                        <Button x:Name="CreateUserButton" Content="{DynamicResource CreateUserButton}"  Width="150" Style="{StaticResource ButtonBaseStyle}" HorizontalAlignment="Left"   
-                            Click="CreateUserButton_Click"/>
-                        <Button x:Name="UpdateUserButton" Content="{DynamicResource UpdateUserButton}"  Width="150" Style="{StaticResource ButtonBaseStyle}" HorizontalAlignment="Right"
-                            />
-                    </WrapPanel>
-                    <WrapPanel Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="1" HorizontalAlignment="Center">
-                        <Button x:Name="DeleteUserButton" Content="{DynamicResource DeleteUserButton}" Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="1" Width="150" Style="{StaticResource ButtonBaseStyle}"
-                    HorizontalAlignment="Stretch"
-                            
-                    />
-
-                        <Button x:Name="BackButton" Content="{DynamicResource BackButton}" Grid.Column="1" HorizontalAlignment="Right" Width="100"                        
-                    Style="{StaticResource ButtonBaseStyle}"
-                    />
-                    </WrapPanel>
+                    <StackPanel Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Center" Orientation="Horizontal">
+                        <Button x:Name="CreateUserButton" Content="{DynamicResource CreateUserButton}" Width="150" Style="{StaticResource ButtonBaseStyle}" HorizontalAlignment="Left" Click="CreateUserButton_Click"/>
+                        <Button x:Name="UpdateUserButton" Content="{DynamicResource UpdateUserButton}" Width="150" Style="{StaticResource ButtonBaseStyle}" HorizontalAlignment="Right" Click="UpdateUserButton_Click"/>
+                        <Button x:Name="DeleteUserButton" Content="{DynamicResource DeleteUserButton}" Width="150" Style="{StaticResource ButtonBaseStyle}" Click="DeleteUserButton_Click"/>
+                    </StackPanel>
                 </Grid>
-
-
-
             </Expander>
 
 
-            <!--Filter section : row 1-->
+            <!-- Filter section : row 1 -->
             <Border Grid.Row="1" Style="{StaticResource DefaultBorderStyle}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Label Content="{DynamicResource FilterUsersLabel}"  Style="{StaticResource LabelBaseStyle}" Grid.Column="0"/>
-                    <ComboBox x:Name="ComboBoxUserType" Grid.Column="1"   
-                      Style="{StaticResource ComboBoxBaseStyle}"
-                      />
-                    <Button x:Name="FilterUsersButton" Content="{DynamicResource FilterUsersButton}"  Grid.Column="2" 
-                        Style="{StaticResource ButtonBaseStyle}" Width="150"
-                        />
-                </Grid>
+                <UniformGrid Columns="3">
+                    <Label Content="{DynamicResource FilterUsersLabel}" Style="{StaticResource LabelBaseStyle}" />
+                    <ComboBox x:Name="ComboBoxUserType" Style="{StaticResource ComboBoxBaseStyle}" />
+                    <Button x:Name="FilterUsersButton" Content="{DynamicResource FilterUsersButton}" Style="{StaticResource ButtonBaseStyle}" Width="150" Click="FilterUsersButton_Click"/>
+                </UniformGrid>
             </Border>
 
             <!-- DataGrid -->
             <DataGrid Grid.Row="2" x:Name="UserTable" Style="{StaticResource DataGridBaseStyle}"
-                      SelectionChanged="UserTable_SelectionChanged"
-                      AutoGenerateColumns="True" AutoGeneratingColumn="DataGrid_AutoGeneratingColumn">
+            SelectionChanged="UserTable_SelectionChanged"
+            AutoGenerateColumns="True" AutoGeneratingColumn="DataGrid_AutoGeneratingColumn">
                 <DataGrid.ColumnHeaderStyle>
                     <StaticResource ResourceKey="DataGridColumnHeaderStyle"/>
                 </DataGrid.ColumnHeaderStyle>
