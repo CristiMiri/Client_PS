@@ -17,7 +17,20 @@ namespace Client.Presenter
             _presentationService = new PresentationService();
             _participantService = new ParticipantService();
             _fileWriter = new FileWriter();
+            StartSetup();
         }
+
+        private async void StartSetup()
+        {
+            await setup();
+        }
+
+        private async Task setup()
+        {            
+            await loadPresentationTable();
+            await loadParticipantTable();
+        }
+
 
 
         public async Task loadPresentationTable()

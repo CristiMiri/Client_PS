@@ -21,14 +21,14 @@ namespace Client
         {
             InitializeComponent();
             this.Hide();
+            (Application.Current as App).ChangeLanguage("en");
             //AdminGui adminGui = new AdminGui();
             //adminGui.Show();
-            //OrganizatorGUI organizatorGUI = new OrganizatorGUI();
-            //organizatorGUI.Show();
+            OrganizatorGUI organizatorGUI = new OrganizatorGUI();
+            organizatorGUI.Show();
             //HomeGUI homeGUI = new HomeGUI();
             //homeGUI.Show();
-            LoginGUI loginGUI = new LoginGUI();
-            loginGUI.Show();
+
         }
     }
 }

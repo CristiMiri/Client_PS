@@ -38,12 +38,16 @@ namespace Client.Presenter
         private UserDTO ValidData()
         {
             string Id = _adminGui.GetIdTextBox().Text;
+            if (String.IsNullOrEmpty(Id))
+            {
+                Id = "0";
+            }
             string Name = _adminGui.GetNameTextBox().Text;
             string Email = _adminGui.GetEmailTextBox().Text;
             string Password = _adminGui.GetPasswordTextBox().Text;
             string Phone = _adminGui.GetPhoneTextBox().Text;
             UserType userType = (UserType)_adminGui.GetUserTypeComboBox().SelectedItem;
-            bool anyEmpty = new[] { Id, Name, Email, Password, Phone }.Any(string.IsNullOrEmpty);
+            bool anyEmpty = new[] {  Name, Email, Password, Phone }.Any(string.IsNullOrEmpty);
             if (anyEmpty)
             {
                 return null;

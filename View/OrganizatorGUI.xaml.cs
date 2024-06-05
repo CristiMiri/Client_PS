@@ -16,9 +16,8 @@ namespace Client.View
         {
             InitializeComponent();
             FillComboBoxes();
-            _organizatorPresenter = new OrganizatorPresenter(this);
-            _organizatorPresenter.loadPresentationTable();
-            _organizatorPresenter.loadParticipantTable();
+            _organizatorPresenter = new OrganizatorPresenter(this);            
+
         }
 
         public DataGrid GetTabelPrezentari()

@@ -24,11 +24,11 @@
                 <TextBlock Text="Conference Application" FontSize="20" FontWeight="Bold" VerticalAlignment="Center" Margin="10" Style="{DynamicResource HeaderTextBlockStyle}"/>
                 <Button x:Name="RomanianButton" Content="RO" Visibility="Hidden"                           
                     Style="{DynamicResource ButtonBaseStyle}"/>
-                <Button x:Name="EnglishButton" Content="EN" MinWidth="100"
+                <Button x:Name="EnglishButton" Content="EN" MinWidth="100" Click="EnglishButton_Click"
                     Style="{DynamicResource ButtonBaseStyle}"/>
-                <Button x:Name="FrenchButton" Content="FR" MinWidth="100"                                         
+                <Button x:Name="FrenchButton" Content="FR" MinWidth="100"   Click="FrenchButton_Click"                                       
                     Style="{DynamicResource ButtonBaseStyle}"/>
-                <Button x:Name="SpanishButton" Content="SP" MinWidth="100"                                         
+                <Button x:Name="SpanishButton" Content="SP" MinWidth="100"    Click="SpanishButton_Click"                                     
                     Style="{DynamicResource ButtonBaseStyle}"/>
 
             </StackPanel>
@@ -106,7 +106,7 @@
 
                         <Label Style="{StaticResource LabelBaseStyle}" Content="{DynamicResource SectionLabel}"  Visibility="Collapsed"
                                Name="SectionLabel"/>
-                        <ComboBox Name="SectionComboBox" Style="{StaticResource ComboBoxBaseStyle}" Visibility="Collapsed" HorizontalAlignment="Right"/>
+                        <ComboBox Name="SectionComboBox" Style="{StaticResource ComboBoxBaseStyle}" Visibility="Collapsed" HorizontalAlignment="Center"/>
 
 
                         <!--Submission Button -->

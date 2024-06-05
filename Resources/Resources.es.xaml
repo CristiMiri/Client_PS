@@ -1,0 +1,93 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="Hello">Hola</sys:String>
+    <sys:String x:Key="Goodbye">Adiós</sys:String>
+    <sys:String x:Key="Confirm">Confirmar</sys:String>
+    <sys:String x:Key="Sign_up">Registrarse</sys:String>
+
+    <!--Common Text-->
+    <sys:String x:Key="BackButton">Atrás</sys:String>
+    <sys:String x:Key="LoginButton">Iniciar sesión</sys:String>
+
+    <!--Form Data-->
+    <sys:String x:Key="NameLabel">Nombre:</sys:String>
+    <sys:String x:Key="EmailLabel">Correo electrónico:</sys:String>
+    <sys:String x:Key="PasswordLabel">Contraseña:</sys:String>
+    <sys:String x:Key="UserTypeLabel">Tipo de usuario:</sys:String>
+    <sys:String x:Key="PhoneLabel">Teléfono:</sys:String>
+    <sys:String x:Key="PINLabel">PIN:</sys:String>
+    <sys:String x:Key="PhotoLabel">Foto:</sys:String>
+    <sys:String x:Key="CVLabel">CV:</sys:String>
+    <sys:String x:Key="TypeLabel">Tipo:</sys:String>
+    <sys:String x:Key="PresentationLabel">Presentación:</sys:String>
+    <sys:String x:Key="TitleLabel">Título:</sys:String>
+    <sys:String x:Key="DescriptionLabel">Descripción:</sys:String>
+    <sys:String x:Key="DateLabel">Fecha:</sys:String>
+    <sys:String x:Key="TimeLabel">Hora:</sys:String>
+    <sys:String x:Key="SectionLabel">Sección:</sys:String>
+    <sys:String x:Key="SearchLabel">Buscar:</sys:String>
+    <sys:String x:Key="FilterLabel">Filtrar:</sys:String>
+    <sys:String x:Key="SearchbySectionLabel">Buscar por sección:</sys:String>
+    <sys:String x:Key="ParticipantsLabel">Participantes:</sys:String>
+
+    <!--User Table Data-->
+    <sys:String x:Key="IdHeader">ID</sys:String>
+    <sys:String x:Key="NameHeader">Nombre</sys:String>
+    <sys:String x:Key="EmailHeader">Correo electrónico</sys:String>
+    <sys:String x:Key="UserTypeHeader">Tipo de usuario</sys:String>
+    <sys:String x:Key="PhoneHeader">Teléfono</sys:String>
+    <sys:String x:Key="PasswordHeader">Contraseña</sys:String>
+
+    <!--Conference Table Data-->
+    <sys:String x:Key="PresentationIdHeader">ID de Presentación</sys:String>
+    <sys:String x:Key="ConferenceTitleHeader">Título de la Conferencia</sys:String>
+    <sys:String x:Key="ConferenceLocationHeader">Ubicación de la Conferencia</sys:String>
+    <sys:String x:Key="ConferenceDateHeader">Fecha de la Conferencia</sys:String>
+    <sys:String x:Key="PresentationTitleHeader">Título de la Presentación</sys:String>
+    <sys:String x:Key="PresentationAuthorHeader">Autor de la Presentación</sys:String>
+    <sys:String x:Key="PresentationDescriptionHeader">Descripción de la Presentación</sys:String>
+    <sys:String x:Key="PresentationDateHeader">Fecha de la Presentación</sys:String>
+    <sys:String x:Key="PresentationTimeHeader">Hora de la Presentación</sys:String>
+    <sys:String x:Key="PresentationSectionHeader">Sección de la Presentación</sys:String>
+
+    <!--Admin Page-->
+    <sys:String x:Key="AdminPageTitle">Administración de Usuarios</sys:String>
+    <sys:String x:Key="CreateUserButton">Crear Usuario</sys:String>
+    <sys:String x:Key="UpdateUserButton">Actualizar Usuario</sys:String>
+    <sys:String x:Key="DeleteUserButton">Eliminar Usuario</sys:String>
+    <sys:String x:Key="FilterUsersLabel">Filtrar Usuarios:</sys:String>
+    <sys:String x:Key="FilterUsersButton">Mostrar Usuarios</sys:String>
+
+    <sys:String x:Key="Author">Autor</sys:String>
+    <sys:String x:Key="Participant">Participante</sys:String>
+
+    <!--User Page-->
+    <sys:String x:Key="UserPageHeader">Conferencias y Presentaciones</sys:String>
+    <sys:String x:Key="ShowButton">Mostrar</sys:String>
+    <sys:String x:Key="SingUpButton">Registrarse</sys:String>
+    <sys:String x:Key="BrowseButton">Explorar...</sys:String>
+    <sys:String x:Key="CreateButton">Crear</sys:String>
+    <sys:String x:Key="UpdateButton">Actualizar</sys:String>
+    <sys:String x:Key="DeleteButton">Eliminar</sys:String>
+
+    <!--Organizer Page-->
+    <sys:String x:Key="Presentation_Management">Gestión de Presentaciones</sys:String>
+    <sys:String x:Key="Participant_Management">Gestión de Participantes</sys:String>
+    <sys:String x:Key="AuthorLabel">Autor:</sys:String>
+    <sys:String x:Key="AddPresentationButton">Agregar Presentación</sys:String>
+    <sys:String x:Key="UpdatePresentationButton">Actualizar Presentación</sys:String>
+    <sys:String x:Key="DeletePresentationButton">Eliminar Presentación</sys:String>
+    <sys:String x:Key="FilterPresentationsLabel">Filtrar Presentaciones:</sys:String>
+    <sys:String x:Key="AddParticipantButton">Agregar Participante</sys:String>
+    <sys:String x:Key="UpdateParticipantButton">Actualizar Participante</sys:String>
+    <sys:String x:Key="DeleteParticipantButton">Eliminar Participante</sys:String>
+    <sys:String x:Key="FilterParticipantsLabel">Filtrar Participantes:</sys:String>
+    <sys:String x:Key="AcceptParticipantButton">Aceptar Participante</sys:String>
+    <sys:String x:Key="RejectParticipantButton">Rechazar Participante</sys:String>
+    <sys:String x:Key="PINHeader">PIN</sys:String>
+    <sys:String x:Key="PhotoHeader">Foto</sys:String>
+    <sys:String x:Key="CVHeader">CV</sys:String>
+    <sys:String x:Key="ParticipantsHeader">Participantes</sys:String>
+    <sys:String x:Key="Statistics_Manager">Gestión de Estadísticas</sys:String>
+</ResourceDictionary>

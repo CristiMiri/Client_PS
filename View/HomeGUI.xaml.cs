@@ -177,5 +177,20 @@ namespace Client.View
                 ShowParticipantFields(true);
             }
         }
+
+        private void FrenchButton_Click(object sender, RoutedEventArgs e)
+        {
+            homeController.FrenchButton_Click();
+        }
+
+        private void EnglishButton_Click(object sender, RoutedEventArgs e)
+        {
+            homeController.EnglishButton_Click();
+        }
+
+        private void SpanishButton_Click(object sender, RoutedEventArgs e)
+        {
+            homeController.SpanishButton_Click();
+        }
     }
 }

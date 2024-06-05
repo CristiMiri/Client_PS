@@ -42,6 +42,7 @@ namespace Client.Presenter
             clientHost = ClientHost.Instance;
             await LoadConferenceTable();
             await LoadAttendPresentationComboBox();
+            EnglishButton_Click();
         }
 
         private ParticipantDTO ValidParticipantData()
@@ -296,6 +297,22 @@ namespace Client.Presenter
             {
                 _homeGui.ShowMessage($"Error creating participant: {ex.Message}");
             }
+        }
+
+
+
+        //Language Buttons
+        public void EnglishButton_Click()
+        {
+            (Application.Current as App).ChangeLanguage("en");
+        }
+        public void FrenchButton_Click()
+        {
+            (Application.Current as App).ChangeLanguage("fr");
+        }
+        public void SpanishButton_Click()
+        {
+            (Application.Current as App).ChangeLanguage("es");
         }
     }
 }
