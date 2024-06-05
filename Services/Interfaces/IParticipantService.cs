@@ -11,7 +11,7 @@ namespace Client.Services.Interfaces
     {
         Task<bool> CreateParticipant(ParticipantDTO participantDTO);
         Task<bool> UpdateParticipant(ParticipantDTO participantDTO);
-        Task<bool> DeleteParticipant(int id);
+        Task<bool> DeleteParticipant(ParticipantDTO participantDTO);
 
         Task<ParticipantDTO> GetParticipant(int id);
         Task<List<ParticipantDTO>> GetAll();

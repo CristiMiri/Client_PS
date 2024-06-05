@@ -4,9 +4,55 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client.View"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
         Title="ChartView" Height="450" Width="800">
-    <Grid>
-        
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Border Style="{StaticResource DefaultBorderStyle}" >
+            <Expander Header="{DynamicResource Statistics_Manager}" IsExpanded="True"                   
+                x:Name="StatisticsManager" Style="{StaticResource ExpanderBaseStyle}">
+                <UniformGrid Columns="2" >
+                    <Button x:Name="ShowParticipantsByConferenceChartButton" Content="Show Participants by conference"                     
+                    Style="{StaticResource ButtonBaseStyle}" MinWidth="200" Click="ShowParticipantsByConferenceChartButton_Click"/>
+                    <Button x:Name="ShowParticipantsBySectionChartButton" Content="Show Participants by section"
+                    Style="{StaticResource ButtonBaseStyle}" MinWidth="200" Click="ShowParticipantsBySectionChartButton_Click"/>
+                    <Button x:Name="ShowPresentationsPerDayChartButton" Content="Show Presentations per day"
+                    Style="{StaticResource ButtonBaseStyle}" MinWidth="200" Click="ShowPresentationsPerDayChartButton_Click"/>
+                    <Button x:Name="ShowRingChartButton" Content="Show Ring Chart"
+                    Style="{StaticResource ButtonBaseStyle}" MinWidth="200" Click="ShowLineChartDialogButton_Click"/>
+                    <Button x:Name="ShowLineChartButton" Content="Show Line Chart" Visibility="Collapsed"
+                    Style="{StaticResource ButtonBaseStyle}" MinWidth="200" Click="ShowRingChartButton_Click"/>
+                    <Button x:Name="ShowPresentationsByAuthorChartButton" Content="Show Presentations by author" Visibility="Collapsed"
+                    Style="{StaticResource ButtonBaseStyle}" MinWidth="200" Click="ShowPresentationsByAuthorChartButton_Click"/>
+                </UniformGrid>
+            </Expander>
+        </Border>
+
+        <!-- Cartesian Chart -->
+        <lvc:CartesianChart x:Name="CartesianChart" Margin="10" Grid.Row="1">
+            <lvc:CartesianChart.AxisX>
+                <lvc:Axis Title="Presentations"/>
+            </lvc:CartesianChart.AxisX>
+            <lvc:CartesianChart.AxisY>
+                <lvc:Axis Title="Number of Participants"/>
+            </lvc:CartesianChart.AxisY>
+        </lvc:CartesianChart>
+
+        <!-- Pie Chart (Ring Chart) -->
+        <lvc:PieChart x:Name="PieChart" Margin="10" Visibility="Hidden" Grid.Row="1"/>
+
+        <!-- Line Chart -->
+        <lvc:CartesianChart x:Name="LineChart" Margin="10" Visibility="Hidden" Grid.Row="1">
+            <lvc:CartesianChart.AxisX>
+                <lvc:Axis Title="Dates"/>
+            </lvc:CartesianChart.AxisX>
+            <lvc:CartesianChart.AxisY>
+                <lvc:Axis Title="Values"/>
+            </lvc:CartesianChart.AxisY>
+        </lvc:CartesianChart>
     </Grid>
 </Window>

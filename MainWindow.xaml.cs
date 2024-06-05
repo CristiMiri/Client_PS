@@ -23,8 +23,12 @@ namespace Client
             this.Hide();
             //AdminGui adminGui = new AdminGui();
             //adminGui.Show();
-            OrganizatorGUI organizatorGUI = new OrganizatorGUI();
-            organizatorGUI.Show();
+            //OrganizatorGUI organizatorGUI = new OrganizatorGUI();
+            //organizatorGUI.Show();
+            //HomeGUI homeGUI = new HomeGUI();
+            //homeGUI.Show();
+            LoginGUI loginGUI = new LoginGUI();
+            loginGUI.Show();
         }
     }
 }

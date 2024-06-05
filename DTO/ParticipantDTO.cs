@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace Client.DTO
 {
@@ -15,6 +16,7 @@ namespace Client.DTO
         public string CNP { get; set; }
         public string PdfFilePath { get; set; }
         public string PhotoFilePath { get; set; }
+        public ImageSource PhotoImage { get; set; }
 
         // Default constructor
         public ParticipantDTO() { }

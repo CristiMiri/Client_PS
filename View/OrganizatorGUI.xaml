@@ -70,6 +70,8 @@
                             MinWidth="150" Style="{StaticResource ButtonBaseStyle}" Click="UpdatePresentationButton_Click"/>
                         <Button x:Name="DeletePresentationButton" Content="{DynamicResource DeletePresentationButton}"
                             MinWidth="150" Style="{StaticResource ButtonBaseStyle}" Click="DeletePresentationButton_Click"/>
+                        <Button x:Name="ShowStatisticsButton" Content="Show Statistics"
+                            MinWidth="150" Style="{StaticResource ButtonBaseStyle}" Click="ShowStatisticsButton_Click"/>
                     </UniformGrid>
                 </Expander>
             </Border>
@@ -103,50 +105,6 @@
 
 
             <!-- Tabel Prezentari :row4-->
-            <!--<DataGrid x:Name="TabelPrezentari" Grid.Row="4" Style="{StaticResource DataGridBaseStyle}"                      
-                  HorizontalAlignment="Stretch" Margin="0,10,0,0">
-                <DataGrid.ColumnHeaderStyle>
-                    <StaticResource ResourceKey="DataGridColumnHeaderStyle"/>
-                </DataGrid.ColumnHeaderStyle>
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="{DynamicResource PresentationIdHeader}"         Binding="{Binding Id}"  />
-                    <DataGridTextColumn Header="{DynamicResource PresentationTitleHeader}"      Binding="{Binding Title}"  />
-                    <DataGridTextColumn Header="{DynamicResource PresentationDescriptionHeader}" Binding="{Binding Description}"  />
-                    <DataGridTextColumn Header="{DynamicResource PresentationDateHeader}"       Binding="{Binding Date}"  />
-                    <DataGridTextColumn Header="{DynamicResource PresentationTimeHeader}"       Binding="{Binding Hour}"  />
-                    <DataGridTextColumn Header="{DynamicResource PresentationSectionHeader}"    Binding="{Binding Section}"  />
-                    <DataGridTemplateColumn Header="{DynamicResource PresentationAuthorHeader}">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <ItemsControl ItemsSource="{Binding Author}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding Name}" />
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="{DynamicResource Participant}">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <ItemsControl ItemsSource="{Binding Participants}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding Name}" />
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-
-                    -->
-            <!--<DataGridTextColumn Header="ID Conferinta" Binding="{Binding Id_conferinta}"  />-->
-            <!--
-                </DataGrid.Columns>
-            </DataGrid>-->
             <DataGrid x:Name="PresentationTable" Grid.Row="4" Style="{StaticResource DataGridBaseStyle}" 
                 HorizontalAlignment="Stretch" Margin="0,10,0,0" AutoGenerateColumns="True"
                       ColumnWidth="auto"
@@ -239,7 +197,15 @@
 
 
             <!-- Tabel Participanti -->
-            <DataGrid Grid.Row="8" x:Name="TabelParticipanti" Style="{StaticResource DataGridBaseStyle}" 
+            <DataGrid Grid.Row="8" x:Name="ParticipantsTable" Style="{StaticResource DataGridBaseStyle}" 
+                HorizontalAlignment="Stretch" AutoGenerateColumns="True"
+                AutoGeneratingColumn="TabelParticipanti_AutoGeneratingColumn">
+                <DataGrid.ColumnHeaderStyle>
+                    <StaticResource ResourceKey="DataGridColumnHeaderStyle"/>
+                </DataGrid.ColumnHeaderStyle>
+            </DataGrid>
+
+            <!--<DataGrid Grid.Row="8" x:Name="TabelParticipanti" Style="{StaticResource DataGridBaseStyle}" 
                   HorizontalAlignment="Stretch"
                   SelectedItem="{Binding Path=ParticipantSelectat}"
                   ItemsSource="{Binding Path=ListaParticipanti}">
@@ -271,7 +237,7 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
-            </DataGrid>
+            </DataGrid>-->
 
             <!--Statistics Section-->
             <Border Style="{StaticResource DefaultBorderStyle}" Grid.Row="9">

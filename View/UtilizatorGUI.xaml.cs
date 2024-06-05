@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Client.Presenter;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,24 @@ namespace Client.View
     /// </summary>
     public partial class UtilizatorGUI : Window
     {
+        private UtilizatorPresenter _utilizatorPresenter;
         public UtilizatorGUI()
         {
             InitializeComponent();
+            _utilizatorPresenter = new UtilizatorPresenter(this);
+            
+        }
+
+        public DataGrid GetConferenceTable()
+        {
+            return this.TabelConferinte;
+        }
+
+
+        private void DownloadLink_Click(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            _utilizatorPresenter.DownloadLink_Click(e.Uri.ToString());
+            MessageBox.Show("File downloaded");
         }
     }
 }

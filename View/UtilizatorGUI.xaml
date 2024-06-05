@@ -5,8 +5,103 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client.View"
         mc:Ignorable="d"
-        Title="UtilizatorGUI" Height="450" Width="800">
+        Background="{DynamicResource AppBackgroundBrush}"
+        Title="User" Height="450" Width="800">
     <Grid>
-        
+        <Grid.RowDefinitions >
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <!-- Header TextBlock -->
+        <TextBlock Grid.Row="0" 
+                   Text="{DynamicResource UserPageHeader}"
+                   HorizontalAlignment="Center" 
+                   FontSize="20" 
+                   FontWeight="Bold" 
+                   Margin="0,10" 
+                   Style="{StaticResource HeaderTextBlockStyle}"/>
+
+
+        <!--Presentation table section-->
+        <DataGrid Name="TabelConferinte" AutoGenerateColumns="False" CanUserAddRows="False"  Grid.Row="1" Style="{DynamicResource DataGridBaseStyle}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="{DynamicResource PresentationIdHeader}"         Binding="{Binding Path=Id}" />
+                <DataGridTextColumn Header="{DynamicResource PresentationTitleHeader}"      Binding="{Binding Path=Title}" />
+                <DataGridTextColumn Header="{DynamicResource PresentationDescriptionHeader}" Binding="{Binding Path=Description}" />
+                <DataGridTextColumn Header="{DynamicResource PresentationDateHeader}"       Binding="{Binding Path=Date}" />
+                <DataGridTextColumn Header="{DynamicResource PresentationSectionHeader}"    Binding="{Binding Path=Section}" />
+            </DataGrid.Columns>
+
+            <!--People Details section-->
+            <DataGrid.RowDetailsTemplate >
+                <DataTemplate >
+                    <StackPanel >
+                        <!-- Participants section -->
+                        <TextBlock Text="{DynamicResource ParticipantsLabel}" FontWeight="Bold" FontSize="14" Padding="5" />
+                        <DataGrid ItemsSource="{Binding Participants}" HeadersVisibility="Column" 
+                     AutoGenerateColumns="False" CanUserAddRows="False" x:Name="ParticipantsTable" Grid.Row="3" 
+                           ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}">
+                            <DataGrid.Columns>
+                                <!-- Photo column -->
+                                <DataGridTemplateColumn Header="{DynamicResource PhotoHeader}"  Width="auto" MinWidth="100">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Image Source="{Binding Path=PhotoImage}" Width="100" Height="100"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="{StaticResource NameHeader}" Binding="{Binding Name}" Width="*" MinWidth="200"/>
+                                <DataGridTextColumn Header="{DynamicResource EmailHeader}" Binding="{Binding Email}" Width="auto" MinWidth="200"/>
+                                <!-- PDF file link column -->
+                                <DataGridTemplateColumn Header="CV" Width="auto" MinWidth="100">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock>
+                         <Hyperlink NavigateUri="{Binding PdfFilePath}" RequestNavigate="DownloadLink_Click">
+                             <TextBlock Text="{Binding PdfFilePath}" />
+                         </Hyperlink>
+                     </TextBlock>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <!-- Author section -->
+                        <TextBlock Text="{DynamicResource Author}" FontWeight="Bold" FontSize="14" Padding="5" />
+                        <DataGrid ItemsSource="{Binding Author}" HeadersVisibility="Column" 
+                     AutoGenerateColumns="False" CanUserAddRows="False" Grid.Row="3"                                                             
+                     ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}">
+                            <DataGrid.Columns>
+                                <!-- Photo column -->
+                                <DataGridTemplateColumn Header="Photo" Width="*" MinWidth="100">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Image Source="{Binding Path=PhotoImage}" Width="100" Height="100"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="Name" Binding="{Binding Name}" MinWidth="200" Width="*"/>
+                                <DataGridTextColumn Header="Email" Binding="{Binding Email}" MinWidth="200" Width="*"/>
+                                <!-- PDF file link column -->
+                                <DataGridTemplateColumn Header="CV" Width="auto" MinWidth="100">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock>
+                                         <Hyperlink NavigateUri="{Binding PdfFilePath}" RequestNavigate="DownloadLink_Click">
+                                             <TextBlock Text="{Binding PdfFilePath}" />
+                                         </Hyperlink>
+                                     </TextBlock>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </DataTemplate>
+            </DataGrid.RowDetailsTemplate>
+
+        </DataGrid>
+
     </Grid>
 </Window>

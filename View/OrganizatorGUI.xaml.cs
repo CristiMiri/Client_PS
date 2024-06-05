@@ -4,7 +4,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-
 namespace Client.View
 {
     /// <summary>
@@ -19,11 +18,13 @@ namespace Client.View
             FillComboBoxes();
             _organizatorPresenter = new OrganizatorPresenter(this);
             _organizatorPresenter.loadPresentationTable();
+            _organizatorPresenter.loadParticipantTable();
         }
 
         public DataGrid GetTabelPrezentari()
         { return this.PresentationTable; }
-
+        public DataGrid GetParticipantsTable()
+        { return this.ParticipantsTable; }
         //Presentation Form
         public TextBox GetIdPrezentareTextBox()
         { return this.IdPrezentareTextBox; }
@@ -185,5 +186,33 @@ namespace Client.View
             MessageBox.Show(message);
         }
 
+
+        private void TabelParticipanti_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
+        {
+            if (e.PropertyName == "PdfFilePath")
+            {
+                var templateColumn = new DataGridTemplateColumn
+                {
+                    Header = "CV",
+                    CellTemplate = (DataTemplate)FindResource("PdfFilePathTemplate")
+                };
+                e.Column = templateColumn;
+            }
+            else if (e.PropertyName == "PhotoFilePath")
+            {
+                var templateColumn = new DataGridTemplateColumn
+                {
+                    Header = "Photo",
+                    CellTemplate = (DataTemplate)FindResource("PhotoFilePathTemplate")
+                };
+                e.Column = templateColumn;
+            }
+        }
+
+        private void ShowStatisticsButton_Click(object sender, RoutedEventArgs e)
+        {
+            ChartView chartView = new ChartView();
+            chartView.Show();
+        }
     }
 }
