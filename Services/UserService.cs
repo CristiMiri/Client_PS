@@ -1,11 +1,6 @@
 ﻿using Client.DTO;
 using Client.Services.Interfaces;
-using Client.View;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Client.Services
 {
@@ -96,6 +91,33 @@ namespace Client.Services
             }
         }
 
+        internal async Task NotifyEmailUpdate(UserDTO user)
+        {
+            try
+            {
+                var updateUserResult = await clientHost.RequestUserService("NotifyEmailUpdate", user);
+                //return Convert.ToBoolean(updateUserResult.Result);
+                return;
+            }
+            catch (Exception ex)
+            {
+                return;
+            }
+        }
 
+        internal async Task NotifyWhatsAppUpdate(UserDTO user)
+        {
+            try
+            {
+                var updateUserResult = await clientHost.RequestUserService("NotifyWhatsAppUpdate", user);
+
+                //return Convert.ToBoolean(updateUserResult.Result);
+                return;
+            }
+            catch (Exception ex)
+            {
+                return;
+            }
+        }
     }
 }

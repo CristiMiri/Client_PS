@@ -21,7 +21,7 @@ namespace Client.View
     /// <summary>
     /// Interaction logic for AdminGui.xaml
     /// </summary>
-    public partial class AdminGui : Window
+    public partial class AdminGui : Window, IObserver
     {
         private AdminPresenter _adminPresenter;
         public AdminGui()
@@ -111,19 +111,28 @@ namespace Client.View
         private async void CreateUserButton_Click(object sender, RoutedEventArgs e)
         {
             await this._adminPresenter.CreateUser();
+            Subject.GetInstance().Notify();
         }
         private async void UpdateUserButton_Click(object sender, RoutedEventArgs e)
         {
             await this._adminPresenter.UpdateUser();
+            Subject.GetInstance().Notify();
         }
         private async void DeleteUserButton_Click(object sender, RoutedEventArgs e)
         {
             await this._adminPresenter.DeleteUser();
+            Subject.GetInstance().Notify();
         }
 
         private async void FilterUsersButton_Click(object sender, RoutedEventArgs e)
         {
             await _adminPresenter.FilterUsers();
+        }
+
+        public async void Update()
+        {
+            this.ClearFormFields();
+            await _adminPresenter.LoadUserTable();
         }
     }
 }

@@ -54,6 +54,8 @@ namespace Client.Services
                 };
 
                 // Send the request to the server
+
+
                 string requestJson = JsonConvert.SerializeObject(request);
                 byte[] requestBytes = Encoding.UTF8.GetBytes(requestJson);
                 await stream.WriteAsync(requestBytes, 0, requestBytes.Length);

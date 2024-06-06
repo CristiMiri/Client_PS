@@ -42,14 +42,17 @@ namespace Client.Presenter
             {
                 case UserType.ADMINISTRATOR:
                     AdminGui adminGUI = new AdminGui();
+                    Subject.GetInstance().Attach(adminGUI);
                     adminGUI.Show();
                     break;
                 case UserType.PARTICIPANT:
                     UtilizatorGUI utilizatorGUI = new UtilizatorGUI();
+                    Subject.GetInstance().Attach(utilizatorGUI);
                     utilizatorGUI.Show();
                     break;
                 case UserType.ORGANIZER:
                     OrganizatorGUI organizatorGUI = new OrganizatorGUI();
+                    Subject.GetInstance().Attach(organizatorGUI);
                     organizatorGUI.Show();
                     break;
                 default:

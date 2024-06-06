@@ -1,4 +1,5 @@
 ﻿using Client.DTO;
+using Client.Facades;
 using Client.Services;
 using Client.View;
 using Newtonsoft.Json;
@@ -8,13 +9,12 @@ namespace Client.Presenter
     internal class AdminPresenter
     {
         private AdminGui _adminGui;
-        private ClientHost clientHost;
-        private UserService _userService;
+        private UserManagementFacade _userFacade;        
 
         public AdminPresenter(AdminGui adminGui)
         {
             _adminGui = adminGui;
-            _userService = new UserService();
+            _userFacade = new UserManagementFacade();
             StartSetup();
         }
 
@@ -24,14 +24,13 @@ namespace Client.Presenter
         }
 
         private async Task setup()
-        {
-            clientHost = ClientHost.Instance;            
+        {                       
             await LoadUserTable();
         }
 
-        private async Task LoadUserTable()
+        public async Task LoadUserTable()
         {
-            var users = await _userService.GetAllUsers();
+            var users = await _userFacade.GetAllUserDTOs();
             _adminGui.GetUserTable().ItemsSource = users;
         }
 
@@ -61,7 +60,7 @@ namespace Client.Presenter
             UserDTO user = ValidData();
             if (user == null)
                 _adminGui.ShowMessage("All fields are mandatory");
-            bool result = await _userService.CreateUser(user);
+            bool result = await _userFacade.CreateUser(user);
             if (result)
             {
                 _adminGui.ClearFormFields();
@@ -79,11 +78,10 @@ namespace Client.Presenter
             UserDTO user = ValidData();
             if (user == null)
                 _adminGui.ShowMessage("All fields are mandatory");
-            bool result = await _userService.UpdateUser(user);
+            bool result = await _userFacade.UpdateUser(user);
             if (result)
             {
-                _adminGui.ClearFormFields();
-                LoadUserTable();
+                Subject.GetInstance().Notify();
                 _adminGui.ShowMessage("Operation Successful");
             }
             else
@@ -97,7 +95,7 @@ namespace Client.Presenter
             UserDTO user = ValidData();
             if (user == null)
                 _adminGui.ShowMessage("All fields are mandatory");
-            bool deleteUserResult = await _userService.DeleteUser(user);
+            bool deleteUserResult = await _userFacade.DeleteUser(user);
             if (deleteUserResult)
             {
                 _adminGui.ClearFormFields();
@@ -123,7 +121,7 @@ namespace Client.Presenter
             else
             {
                 UserType userType = (UserType)_adminGui.GetFilterUsersComboBox().SelectedIndex;                
-                var users = await _userService.GetUsersByUserType(userType);
+                var users = await _userFacade.GetUsersByUserType(userType);
                 _adminGui.GetUserTable().ItemsSource = users;
                 return;
             }

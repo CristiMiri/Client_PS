@@ -13,6 +13,7 @@ using System.Windows;
 using DocumentFormat.OpenXml.Presentation;
 using System.IO;
 using DocumentFormat.OpenXml.Drawing.Diagrams;
+using Client.Facades;
 
 namespace Client.Presenter
 {
@@ -21,14 +22,14 @@ namespace Client.Presenter
 
         private HomeGUI _homeGui;
         private ClientHost clientHost;
-        private ParticipantService _participantService;
-        private PresentationService _presentationService;
+        private ParticipantManagementFacade _participantService;
+        private PresentationManagementFacade _presentationService;
 
         public HomePresenter(HomeGUI homeGui)
         {
             _homeGui = homeGui;
-            _participantService = new ParticipantService();
-            _presentationService = new PresentationService();
+            _participantService = new ParticipantManagementFacade();
+            _presentationService = new PresentationManagementFacade();
             StartSetup();
         }
 
@@ -97,7 +98,7 @@ namespace Client.Presenter
 
         public async Task LoadConferenceTable()
         {
-            List<PresentationDTO> presentations = await _presentationService.GetAllPresentation();
+            List<PresentationDTO> presentations = await _presentationService.GetAllPresentations();
             Dictionary<string, byte[]> photos = await _participantService.GetParticipantsPhotos();
 
             foreach (PresentationDTO p in presentations)
@@ -124,7 +125,7 @@ namespace Client.Presenter
         }
         private async Task LoadFilteredConferenceTable(Section section)
         {
-            List<PresentationDTO> presentations = await _presentationService.GetPresentationsbySection(section);
+            List<PresentationDTO> presentations = await _presentationService.GetPresentationsBySection(section);
             Dictionary<string, byte[]> photos = await _participantService.GetParticipantsPhotos();
 
             foreach (PresentationDTO p in presentations)
@@ -150,7 +151,7 @@ namespace Client.Presenter
             _homeGui.GetConferenceTable().ItemsSource = presentations;
         }
         private async Task LoadAttendPresentationComboBox()
-        {            
+        {
             List<PresentationDTO> presentations = _homeGui.GetConferenceTable().ItemsSource as List<PresentationDTO>;
             var presentationItems = presentations.Select(p => new
             {
@@ -228,33 +229,16 @@ namespace Client.Presenter
             try
             {
                 ParticipantDTO author = ValidParticipantData();
-                if (author != null)
+                PresentationDTO presentation = ValidPresentationData();
+
+                if (presentation != null && author != null)
                 {
-                    Dictionary<string, byte[]> photo = new Dictionary<string, byte[]>();
-                    string photoPath = _homeGui.GetPhotoPathTexBox().Text;
-                    string photoFileName = Path.GetFileName(photoPath);
-                    photo.Add(photoFileName, File.ReadAllBytes(photoPath));
-                    await _participantService.SaveParticipantPhoto(photo);
-
-                    Dictionary<string, byte[]> document = new Dictionary<string, byte[]>();
-                    string documentPath = _homeGui.GetDocumentPathTexBox().Text;
-                    string documentFileName = Path.GetFileName(documentPath);
-                    document.Add(documentFileName, File.ReadAllBytes(documentPath));
-                    await _participantService.SaveParticipantCV(document);
-                    _homeGui.ShowMessage("Files have been successfully uploaded!"); 
-
-                    await _participantService.UpsertParticipant(author);
+                    await _participantService.CreateAuthor(author, presentation);
                     _homeGui.ShowMessage("Author created successfully!");
-                    PresentationDTO presentation = ValidPresentationData();
-                    if (presentation != null)
-                    {
-                        int idAuthor = await _participantService.GetLastParticipantId();
-                        presentation.IdAuthor = idAuthor;
-                        await _presentationService.CreatePresentation(presentation);
-                        _homeGui.ShowMessage("Presentation created successfully!");
-                        ClearFields();                      
-                    }
+                    _homeGui.ShowMessage("Presentation created successfully!");
+                    ClearFields();
                 }
+
             }
             catch (Exception ex)
             {
@@ -270,24 +254,8 @@ namespace Client.Presenter
 
                 if (participant != null)
                 {
-                    Dictionary<string, byte[]> photo = new Dictionary<string, byte[]>();
-                    string photoPath = _homeGui.GetPhotoPathTexBox().Text;
-                    string photoFileName = Path.GetFileName(photoPath);
-                    photo.Add(photoFileName, File.ReadAllBytes(photoPath));
-                    await _participantService.SaveParticipantPhoto(photo);
-
-                    Dictionary<string, byte[]> document = new Dictionary<string, byte[]>();
-                    string documentPath = _homeGui.GetDocumentPathTexBox().Text;
-                    string documentFileName = Path.GetFileName(documentPath);
-                    document.Add(documentFileName, File.ReadAllBytes(documentPath));
-                    await _participantService.SaveParticipantCV(document);
-                    _homeGui.ShowMessage("Files uploaded successfully!");
-
-                    await _participantService.CreateParticipant(participant);
-                    int idParticipant = await _participantService.GetLastParticipantId();
                     int idPresentation = (int)_homeGui.GetAttendPresentationComboBox().SelectedValue;
-                    
-                    await _participantService.CreateParticipantPresentation(Tuple.Create(idParticipant, idPresentation));
+                    await _participantService.CreateParticipant(participant, idPresentation);
                     _homeGui.ShowMessage("Participant created successfully!");
                     ClearFields();
                 }

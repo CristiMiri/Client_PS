@@ -10,7 +10,7 @@ namespace Client.View
     /// <summary>
     /// Interaction logic for HomeGUI.xaml
     /// </summary>
-    public partial class HomeGUI : Window
+    public partial class HomeGUI : Window, IObserver
     {
         private HomePresenter homeController;
         public HomeGUI()
@@ -156,6 +156,7 @@ namespace Client.View
             {
                 ShowMessage($"Error uploading files: {ex.Message}");
             }
+            Subject.GetInstance().Notify();
         }
 
         public void ShowMessage(string message)
@@ -191,6 +192,11 @@ namespace Client.View
         private void SpanishButton_Click(object sender, RoutedEventArgs e)
         {
             homeController.SpanishButton_Click();
+        }
+
+        public async void Update()
+        {            
+            await homeController.LoadConferenceTable();
         }
     }
 }

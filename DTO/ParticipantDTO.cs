@@ -16,7 +16,7 @@ namespace Client.DTO
         public string CNP { get; set; }
         public string PdfFilePath { get; set; }
         public string PhotoFilePath { get; set; }
-        public ImageSource PhotoImage { get; set; }
+        public ImageSource? PhotoImage { get; set; }
 
         // Default constructor
         public ParticipantDTO() { }

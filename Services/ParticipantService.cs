@@ -2,6 +2,7 @@
 using Client.Services.Interfaces;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Vml.Office;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -88,7 +89,7 @@ namespace Client.Services
         {
             try
             {
-                var result = await ClientHost.Instance.RequestParticipantService("GetParticipantsbySection", new { });
+                var result = await ClientHost.Instance.RequestParticipantService("GetParticipantsbySection", section);
                 return Newtonsoft.Json.JsonConvert.DeserializeObject<List<ParticipantDTO>>(result.Data.ToString());
             }
             catch (Exception ex)
@@ -151,7 +152,7 @@ namespace Client.Services
         {
             try
             {
-                var createUserResult = await ClientHost.Instance.RequestParticipantService("SaveParticipantCV",file);
+                var createUserResult = await ClientHost.Instance.RequestParticipantService("SaveParticipantCV", file);
                 return Convert.ToBoolean(createUserResult.Result);
             }
             catch (Exception ex)
@@ -164,15 +165,39 @@ namespace Client.Services
         {
             try
             {
-                var result = await ClientHost.Instance.RequestParticipantService("CreateParticipantPresentation", new { relation});
+                var result = await ClientHost.Instance.RequestParticipantService("CreateParticipantPresentation", new { relation });
                 return Convert.ToBoolean(result.Result);
-        }
+            }
             catch (Exception ex)
             {
                 return false;
             }
         }
 
+        internal async Task<bool> AcceptParticipant(ParticipantDTO participant)
+        {
+            try
+            {
+                var result = await ClientHost.Instance.RequestParticipantService("AcceptParticipant", participant);
+                return Convert.ToBoolean(result.Result);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
 
+        internal async Task<bool> RejectParticipant(ParticipantDTO participant)
+        {
+            try
+            {
+                var result = await ClientHost.Instance.RequestParticipantService("RejectParticipant", participant);
+                return Convert.ToBoolean(result.Result);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
     }
 }

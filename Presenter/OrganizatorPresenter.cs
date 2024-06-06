@@ -2,6 +2,10 @@
 using Client.Services;
 using Client.View;
 using System.Windows;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
+using System.IO;
+using Client.Services.Strategy;
 
 namespace Client.Presenter
 {
@@ -15,8 +19,7 @@ namespace Client.Presenter
         {
             _organizatorGUI = organizatorGUI;
             _presentationService = new PresentationService();
-            _participantService = new ParticipantService();
-            _fileWriter = new FileWriter();
+            _participantService = new ParticipantService();           
             StartSetup();
         }
 
@@ -26,7 +29,7 @@ namespace Client.Presenter
         }
 
         private async Task setup()
-        {            
+        {
             await loadPresentationTable();
             await loadParticipantTable();
         }
@@ -42,8 +45,32 @@ namespace Client.Presenter
         {
 
             var participants = await _participantService.GetAll();
+            Dictionary<string, byte[]> photos = await _participantService.GetParticipantsPhotos();
+            foreach (var participant in participants)
+            {
+                if (photos.ContainsKey(participant.PhotoFilePath))
+                {
+                    participant.PhotoImage = ByteArrayToImageSource(photos[participant.PhotoFilePath]);
+
+                }
+            }
             _organizatorGUI.GetParticipantsTable().ItemsSource = participants;
         }
+        public async Task LoadFilteredParticipantTable(Section section)
+        {
+            var participants = await _participantService.GetParticipantsbySection(section);
+            Dictionary<string, byte[]> photos = await _participantService.GetParticipantsPhotos();
+            foreach (var participant in participants)
+            {
+                if (photos.ContainsKey(participant.PhotoFilePath))
+                {
+                    participant.PhotoImage = ByteArrayToImageSource(photos[participant.PhotoFilePath]);
+
+                }
+            }
+            _organizatorGUI.GetParticipantsTable().ItemsSource = participants;
+        }
+
 
         private PresentationDTO ValidPresentationData()
         {
@@ -63,8 +90,39 @@ namespace Client.Presenter
         }
         private ParticipantDTO ValidParticipantData()
         {
-            //TODO: Implement this method trow exception
-            throw new NotImplementedException();
+            if(String.IsNullOrEmpty(_organizatorGUI.GetIdParticipantTextBox().Text))
+            {
+                _organizatorGUI.GetIdParticipantTextBox().Text = "0";
+            }
+            int id = Convert.ToInt32(_organizatorGUI.GetIdParticipantTextBox().Text);
+            string name = _organizatorGUI.GetNameTextBox().Text;
+            string email = _organizatorGUI.GetEmailTextBox().Text;
+            string phone = _organizatorGUI.GetPhoneTextBox().Text;
+            string pin = _organizatorGUI.GetPinTextBox().Text;
+            string photoPath = _organizatorGUI.GetPhotoPathTextBox().Text;
+            string documentPath = _organizatorGUI.GetDocumentPathTextBox().Text;
+            if (String.IsNullOrEmpty(name) || String.IsNullOrEmpty(email) || String.IsNullOrEmpty(phone) || String.IsNullOrEmpty(pin) || String.IsNullOrEmpty(photoPath) || String.IsNullOrEmpty(documentPath))
+            {
+                MessageBox.Show("Va rog completati toate campurile!");
+                return null;
+            }
+            if (!email.Contains("@") || !email.Contains("."))
+            {
+                MessageBox.Show("Email invalid!");
+                return null;
+            }
+            if (phone.Length != 10)
+            {
+                MessageBox.Show("Numar de telefon invalid!");
+                return null;
+            }
+            if (pin.Length != 13)
+            {
+                MessageBox.Show("CNP invalid!");
+                return null;
+            }
+            return new ParticipantDTO(id, name, email, phone, pin, documentPath, photoPath);
+
 
         }
 
@@ -84,6 +142,7 @@ namespace Client.Presenter
             {
                 _organizatorGUI.ShowMessage("Operation Failed");
             }
+            Subject.GetInstance().Notify();
         }
         public async Task UpdatePresentation()
         {
@@ -101,6 +160,7 @@ namespace Client.Presenter
             {
                 _organizatorGUI.ShowMessage("Operation Failed");
             }
+            Subject.GetInstance().Notify();
         }
         public async Task DeletePresentation()
         {
@@ -119,6 +179,7 @@ namespace Client.Presenter
             {
                 _organizatorGUI.ShowMessage("Operation Failed");
             }
+            Subject.GetInstance().Notify();
 
         }
 
@@ -132,12 +193,10 @@ namespace Client.Presenter
             }
             else
             {
-                var presentations = await _presentationService.GetPresentationsbySection(section);
-                _organizatorGUI.GetTabelPrezentari().ItemsSource = presentations;
+                await LoadFilteredParticipantTable(section);
                 return;
             }
         }
-
         internal async Task DownloadPresentationList()
         {
             String selectedFileFormat = _organizatorGUI.GetSelectFormatComboBox().SelectedItem.ToString();
@@ -146,71 +205,105 @@ namespace Client.Presenter
                 MessageBox.Show("Va rog alegeti un format de fisier!");
                 return;
             }
-            if (selectedFileFormat == "Csv")
-            {
-                List<PresentationDTO> ListaPrezentari = _organizatorGUI.GetTabelPrezentari().ItemsSource.Cast<PresentationDTO>().ToList();
-                _fileWriter.SaveCsv(ListaPrezentari);
-                MessageBox.Show("Lista prezentarilor salvata cu succes!");
-            }
-            if (selectedFileFormat == "Json")
-            {
-                List<PresentationDTO> ListaPrezentari = _organizatorGUI.GetTabelPrezentari().ItemsSource.Cast<PresentationDTO>().ToList();
-                _fileWriter.SaveJson(ListaPrezentari);
-                MessageBox.Show("Lista prezentarilor salvata cu succes!");
-            }
-            if (selectedFileFormat == "Xml")
-            {
-                List<PresentationDTO> ListaPrezentari = _organizatorGUI.GetTabelPrezentari().ItemsSource.Cast<PresentationDTO>().ToList();
-                _fileWriter.SaveXml(ListaPrezentari);
-                MessageBox.Show("Lista prezentarilor salvata cu succes!");
 
-            }
-            if (selectedFileFormat == "Doc")
+            ISaveStrategy saveStrategy;
+            switch (selectedFileFormat)
             {
-                List<PresentationDTO> ListaPrezentari = _organizatorGUI.GetTabelPrezentari().ItemsSource.Cast<PresentationDTO>().ToList();
-                _fileWriter.SaveDoc(ListaPrezentari);
-                MessageBox.Show("Lista prezentarilor salvata cu succes!");
+                case "Csv":
+                    saveStrategy = new CsvSaveStrategy();
+                    break;
+                case "Json":
+                    saveStrategy = new JsonSaveStrategy();
+                    break;
+                case "Xml":
+                    saveStrategy = new XmlSaveStrategy();
+                    break;
+                case "Doc":
+                    saveStrategy = new DocxSaveStrategy();
+                    break;
+                default:
+                    throw new ArgumentException("Invalid file format");
             }
+
+            List<PresentationDTO> ListaPrezentari = _organizatorGUI.GetTabelPrezentari().ItemsSource.Cast<PresentationDTO>().ToList();
+            FileWriter fileWriter = new FileWriter(saveStrategy);
+            fileWriter.Save(ListaPrezentari, "C:\\Users\\crist\\Desktop\\ListaPrezentari." + selectedFileFormat.ToLower());
+            MessageBox.Show("Lista prezentarilor salvata cu succes!");
         }
 
+        
 
         public async Task CreateParticipant()
         {
             ParticipantDTO participant = ValidParticipantData();
             if (participant == null)
                 _organizatorGUI.ShowMessage("All fields are mandatory");
-            bool result = await _participantService.CreateParticipant(participant);
-            if (result)
-            {
-                _organizatorGUI.ClearFormFields();
-                loadParticipantTable();
-                _organizatorGUI.ShowMessage("Operation Successful");
-            }
             else
             {
-                _organizatorGUI.ShowMessage("Operation Failed");
+                Dictionary<string, byte[]> photo = new Dictionary<string, byte[]>();
+                string photoPath = _organizatorGUI.GetPhotoPathTextBox().Text;
+                string photoFileName = Path.GetFileName(photoPath);
+                photo.Add(photoFileName, File.ReadAllBytes(photoPath));
+                await _participantService.SaveParticipantPhoto(photo);
+
+                Dictionary<string, byte[]> document = new Dictionary<string, byte[]>();
+                string documentPath = _organizatorGUI.GetDocumentPathTextBox().Text;
+                string documentFileName = Path.GetFileName(documentPath);
+                document.Add(documentFileName, File.ReadAllBytes(documentPath));
+                await _participantService.SaveParticipantCV(document);
+                _organizatorGUI.ShowMessage("Files uploaded successfully!");
+                bool result = await _participantService.CreateParticipant(participant);
+                if (result)
+                {
+                    _organizatorGUI.ClearFormFields();
+                    loadParticipantTable();
+                    _organizatorGUI.ShowMessage("Operation Successful");
+                }
+                else
+                {
+                    _organizatorGUI.ShowMessage("Operation Failed");
+                }
             }
+            Subject.GetInstance().Notify();
         }
         public async Task UpdateParticipant()
         {
             ParticipantDTO participant = ValidParticipantData();
             if (participant == null)
                 _organizatorGUI.ShowMessage("All fields are mandatory");
-            bool result = await _participantService.UpdateParticipant(participant);
-            if (result)
-            {
-                _organizatorGUI.ClearFormFields();
-                loadParticipantTable();
-                _organizatorGUI.ShowMessage("Operation Successful");
-            }
             else
             {
-                _organizatorGUI.ShowMessage("Operation Failed");
+                Dictionary<string, byte[]> photo = new Dictionary<string, byte[]>();
+                string photoPath = _organizatorGUI.GetPhotoPathTextBox().Text;
+                string photoFileName = Path.GetFileName(photoPath);
+                photo.Add(photoFileName, File.ReadAllBytes(photoPath));
+                await _participantService.SaveParticipantPhoto(photo);
+
+                Dictionary<string, byte[]> document = new Dictionary<string, byte[]>();
+                string documentPath = _organizatorGUI.GetDocumentPathTextBox().Text;
+                string documentFileName = Path.GetFileName(documentPath);
+                document.Add(documentFileName, File.ReadAllBytes(documentPath));
+                await _participantService.SaveParticipantCV(document);
+                _organizatorGUI.ShowMessage("Files uploaded successfully!");
+                bool result = await _participantService.UpdateParticipant(participant);
+                if (result)
+                {
+                    _organizatorGUI.ClearFormFields();
+                    loadParticipantTable();
+                    _organizatorGUI.ShowMessage("Operation Successful");
+                }
+                else
+                {
+                    _organizatorGUI.ShowMessage("Operation Failed");
+                }
             }
+            Subject.GetInstance().Notify();
         }
         public async Task DeleteParticipant()
         {
-            ParticipantDTO participant = ValidParticipantData();
+            ParticipantDTO participant = new ParticipantDTO();
+            participant.Id = Convert.ToInt32(_organizatorGUI.GetIdParticipantTextBox().Text);
+
             if (participant == null)
                 _organizatorGUI.ShowMessage("All fields are mandatory");
             bool result = await _participantService.DeleteParticipant(participant);
@@ -224,9 +317,73 @@ namespace Client.Presenter
             {
                 _organizatorGUI.ShowMessage("Operation Failed");
             }
+            Subject.GetInstance().Notify();
         }
+        public async Task FilterParticipants()
+        {
+            Section section = (Section)_organizatorGUI.GetFilterParticipantsComboBox().SelectedIndex;
+            if (section == Section.ALL)
+            {
+                await loadParticipantTable();
+                return;
+            }
+            else
+            {
+                await LoadFilteredParticipantTable(section);
+                return;
+            }
+        }
+        public async Task AcceptParticipant()
+        {
+            ParticipantDTO participant = ValidParticipantData();
+            bool result = await _participantService.AcceptParticipant(participant);
+            if (result)
+            {
+                _organizatorGUI.ClearFormFields();
+                loadParticipantTable();
+                _organizatorGUI.ShowMessage("Operation Successful");
+            }
+            else
+            {
+                _organizatorGUI.ShowMessage("Operation Failed");
+            }
 
+        }
+        public async Task RejectParticipant()
+        {
+            ParticipantDTO participant = ValidParticipantData();
+            bool result = await _participantService.RejectParticipant(participant);
+            if (result)
+            {
+                _organizatorGUI.ClearFormFields();
+                loadParticipantTable();
+                _organizatorGUI.ShowMessage("Operation Successful");
+            }
+            else
+            {
+                _organizatorGUI.ShowMessage("Operation Failed");
+            }
 
+        }
+        public static ImageSource ByteArrayToImageSource(byte[] imageData)
+        {
+            if (imageData == null || imageData.Length == 0)
+                return null;
+
+            var image = new BitmapImage();
+            using (var mem = new System.IO.MemoryStream(imageData))
+            {
+                mem.Position = 0;
+                image.BeginInit();
+                image.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
+                image.CacheOption = BitmapCacheOption.OnLoad;
+                image.UriSource = null;
+                image.StreamSource = mem;
+                image.EndInit();
+            }
+            image.Freeze();
+            return image;
+        }
 
     }
 }

@@ -18,7 +18,7 @@ namespace Client.View
     /// <summary>
     /// Interaction logic for UtilizatorGUI.xaml
     /// </summary>
-    public partial class UtilizatorGUI : Window
+    public partial class UtilizatorGUI : Window, IObserver
     {
         private UtilizatorPresenter _utilizatorPresenter;
         public UtilizatorGUI()
@@ -33,6 +33,10 @@ namespace Client.View
             return this.TabelConferinte;
         }
 
+        public async void Update()
+        {
+            await _utilizatorPresenter.LoadConferenceTable();
+        }
 
         private void DownloadLink_Click(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {

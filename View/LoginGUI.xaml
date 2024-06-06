@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Client.View"
         mc:Ignorable="d"
         Background="{DynamicResource AppBackgroundBrush}"
-        Title="Login" Height="450" Width="800">
+        Title="{DynamicResource LoginWindowTitle}" Height="450" Width="800">
 
     <UniformGrid Rows="4"  HorizontalAlignment="Center" VerticalAlignment="Center">
         <!--Email box-->

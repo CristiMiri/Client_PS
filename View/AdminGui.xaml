@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client.View"
         mc:Ignorable="d"
-        Title="AdminGui" Height="450" Width="800"
-        Background="{DynamicResource AppBackgroundBrush}"          >
+        Title="{DynamicResource AdminGuiTitle}" Height="450" Width="800"
+        Background="{DynamicResource AppBackgroundBrush}">
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
         <Grid HorizontalAlignment="Center">
 
@@ -86,31 +86,4 @@
             </DataGrid>
         </Grid>
     </ScrollViewer>
-
-
-
-
-
-
-
-
-
-
-
-
-    <!--<DataGrid Grid.Row="2" x:Name="UserTable"  AutoGenerateColumns="True"
-                  Style="{StaticResource DataGridBaseStyle}">
-            <DataGrid.ColumnHeaderStyle>
-                <StaticResource ResourceKey="DataGridColumnHeaderStyle"/>
-            </DataGrid.ColumnHeaderStyle>
-            --><!--<DataGrid.Columns>
-                <DataGridTextColumn Header ="ID" Binding="{Binding Id}" Width="*" />
-                <DataGridTextColumn Header ="Name" Binding="{Binding Name}" Width="*"/>
-                <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="*"/>
-                <DataGridTextColumn Header ="Type" Binding="{Binding UserType}" Width="*"/>
-                <DataGridTextColumn Header="Phone" Binding="{Binding Phone}" Width="*"/>
-                <DataGridTextColumn Header ="Password" Binding="{Binding Password}" Width="*"/>
-            </DataGrid.Columns>--><!--
-
-        </DataGrid>-->    
 </Window>

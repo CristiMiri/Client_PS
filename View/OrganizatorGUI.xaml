@@ -7,6 +7,23 @@
         mc:Ignorable="d"
         Background="{DynamicResource AppBackgroundBrush}"          
         Title="Organizator" Height="450" Width="800">
+
+    <Window.Resources>
+        <!-- DataTemplates for DataGrid columns -->
+        <DataTemplate x:Key="PdfFilePathTemplate">
+            <TextBlock>
+                <Hyperlink NavigateUri="{Binding PdfFilePath}">
+                    <TextBlock Text="{Binding PdfFilePath}" />
+                </Hyperlink>
+            </TextBlock>
+        </DataTemplate>
+        <DataTemplate x:Key="PhotoFilePathTemplate">
+            <Image Source="{Binding Path=PhotoImage}" Width="100" Height="100"/>
+        </DataTemplate>
+        
+        
+    </Window.Resources>
+    
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
         <Grid>
             <Grid.RowDefinitions>
@@ -149,29 +166,29 @@
                         <!-- Row 5: Photo Upload -->
                         <Label Style="{StaticResource LabelBaseStyle}" Content="{DynamicResource PhotoLabel}"/>
                         <TextBox Name="PhotoPathTextBox" Style="{StaticResource InputControlStyle}" Visibility="Collapsed"/>
-                        <Button Name="BrowsePhotoButton" Style="{DynamicResource ButtonBaseStyle}" 
+                        <Button Name="BrowsePhotoButton" Style="{DynamicResource ButtonBaseStyle}"  Click="BrowsePhoto_Click"
             HorizontalAlignment="Center" Width="100" Content="{DynamicResource BrowseButton}"/>
 
                         <!-- Row 6: Document Upload -->
                         <Label Style="{StaticResource LabelBaseStyle}" Content="{DynamicResource CVLabel}"/>
                         <TextBox Name="DocumentPathTextBox" Style="{StaticResource InputControlStyle}" Visibility="Collapsed"/>
-                        <Button Name="BrowseDocumentButton" Style="{DynamicResource ButtonBaseStyle}" 
+                        <Button Name="BrowseDocumentButton" Style="{DynamicResource ButtonBaseStyle}"  Click="BrowseDocument_Click"
             HorizontalAlignment="Center" Width="100" Content="{DynamicResource BrowseButton}"/>
 
                         <Button x:Name="CreateParticipantButton" Content="{DynamicResource AddParticipantButton}"
-                Command="{Binding Path=CreateParticipantCommand}"
+                                Click="CreateParticipantButton_Click"
                 Style="{StaticResource ButtonBaseStyle}"/>
                         <Button x:Name="UpdateParticipantButton" Content="{DynamicResource UpdateParticipantButton}"
-                Command="{Binding Path=UpdateParticipantCommand}"
+                Command="{Binding Path=UpdateParticipantCommand}" Click="UpdateParticipantButton_Click"
                 Style="{StaticResource ButtonBaseStyle}"/>
                         <Button x:Name="AcceptParticipantButton" Content="{DynamicResource AcceptParticipantButton}"
-                Command="{Binding Path=AcceptParticipantCommand}"
+                Click="AcceptParticipantButton_Click"
                 Style="{StaticResource ButtonBaseStyle}"/>
                         <Button x:Name="RejectParticipantButton" Content="{DynamicResource RejectParticipantButton}"
-                Command="{Binding Path=RejectParticipantCommand}"
+                Click="RejectParticipantButton_Click"
                 Style="{StaticResource ButtonBaseStyle}"/>
                         <Button x:Name="DeleteParticipantButton" Content="{DynamicResource DeleteParticipantButton}"
-                Command="{Binding Path=DeleteParticipantCommand}"
+                Command="{Binding Path=DeleteParticipantCommand}" Click="DeleteParticipantButton_Click"
                 Style="{StaticResource ButtonBaseStyle}"/>
                     </UniformGrid>
 
@@ -189,8 +206,8 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Label Content="{DynamicResource FilterParticipantsLabel}" Style="{StaticResource LabelBaseStyle}" Grid.Column="0"/>
-                    <ComboBox x:Name="FilterParticipantsComboBox" Grid.Column="1" Style="{StaticResource ComboBoxBaseStyle}"/>
-                    <Button x:Name="FilterParticipantButton" Content="{DynamicResource ShowButton}"  Grid.Column="2" 
+                    <ComboBox x:Name="FilterParticipantsComboBox" Grid.Column="1" Style="{StaticResource ComboBoxBaseStyle}" />
+                    <Button x:Name="FilterParticipantButton" Content="{DynamicResource ShowButton}"  Grid.Column="2" Click="FilterParticipantButton_Click"
                     Style="{StaticResource ButtonBaseStyle}"/>
                 </Grid>
             </Border>
@@ -199,6 +216,7 @@
             <!-- Tabel Participanti -->
             <DataGrid Grid.Row="8" x:Name="ParticipantsTable" Style="{StaticResource DataGridBaseStyle}" 
                 HorizontalAlignment="Stretch" AutoGenerateColumns="True"
+                      SelectionChanged="SelectParticipant"
                 AutoGeneratingColumn="TabelParticipanti_AutoGeneratingColumn">
                 <DataGrid.ColumnHeaderStyle>
                     <StaticResource ResourceKey="DataGridColumnHeaderStyle"/>
@@ -239,26 +257,7 @@
                 </DataGrid.Columns>
             </DataGrid>-->
 
-            <!--Statistics Section-->
-            <Border Style="{StaticResource DefaultBorderStyle}" Grid.Row="9">
-                <Expander Header="{DynamicResource Statistics_Manager}" IsExpanded="True" 
-                    x:Name="StatisticsManager" Style="{StaticResource ExpanderBaseStyle}">
-                    <UniformGrid Columns="2">
-                        <Button x:Name="ShowParticipantsByConferenceChartButton" Content="Show Participants by conference"                     
-                                Style="{StaticResource ButtonBaseStyle}" MinWidth="150"/>
-                        <Button x:Name="ShowParticipantsBySectionChartButton" Content="Show Participants by section"
-                                Style="{StaticResource ButtonBaseStyle}" MinWidth="150"/>
-                        <Button x:Name="ShowPresentationsPerDayChartButton" Content="Show Presentations per day"
-                                Style="{StaticResource ButtonBaseStyle}" MinWidth="150"/>
-                        <Button x:Name="ShowPresentationsByAuthorChartButton" Content="Show Presentations by author"
-                                Style="{StaticResource ButtonBaseStyle}" MinWidth="150"/>
-                        <Button x:Name="ShowLineChartDialogButton" Content="Show Line Chart"
-                                Style="{StaticResource ButtonBaseStyle}" MinWidth="150"/>
-                        <Button x:Name="ShowRingChartButton" Content="Show Ring Chart"
-                                Style="{StaticResource ButtonBaseStyle}" MinWidth="150"/>
-                    </UniformGrid>
-                </Expander>
-            </Border>
+            
 
         </Grid>
     </ScrollViewer>

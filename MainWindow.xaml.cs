@@ -1,4 +1,5 @@
-﻿using Client.View;
+﻿using Client.Presenter;
+using Client.View;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,12 +23,10 @@ namespace Client
             InitializeComponent();
             this.Hide();
             (Application.Current as App).ChangeLanguage("en");
-            //AdminGui adminGui = new AdminGui();
-            //adminGui.Show();
-            OrganizatorGUI organizatorGUI = new OrganizatorGUI();
-            organizatorGUI.Show();
-            //HomeGUI homeGUI = new HomeGUI();
-            //homeGUI.Show();
+            HomeGUI homeGUI = new HomeGUI();
+            Subject.GetInstance().Attach(homeGUI);
+            homeGUI.Show();
+
 
         }
     }
